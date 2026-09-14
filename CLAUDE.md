@@ -25,6 +25,7 @@ Mobile iOS voice active-recall step inside Knowunity's study plan. After a run o
 ## Where things are
 
 - tokens/tokens.json — semantic design tokens. Read before writing styles.
+- build/css/tokens.css is generated; never edit it, edit tokens/tokens.json and run npm run tokens.
 - docs/sprint-context.md — locked decisions and scope. Read first every session.
 - docs/design-system.md — components, naming conventions and component rules. Read before building UI.
 - docs/design-brief.md — problem, constraints and success metrics. Read when sprint-context does not cover the question.
