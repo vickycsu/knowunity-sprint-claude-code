@@ -1,0 +1,162 @@
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--color-size-space-1200);
+  min-height: var(--color-size-space-1200);
+  border-radius: var(--color-size-radius-full);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-icon:disabled {
+  cursor: not-allowed;
+}
+
+.btn-icon__inner {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--color-size-radius-full);
+  padding-bottom: var(--color-size-space-050);
+}
+
+.btn-icon__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon__spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sizes */
+
+.btn-icon--s .btn-icon__inner {
+  width: var(--color-size-space-800);
+  height: var(--color-size-space-800);
+}
+.btn-icon--s .btn-icon__icon,
+.btn-icon--s .btn-icon__spinner {
+  width: var(--color-size-icon-200);
+  height: var(--color-size-icon-200);
+}
+
+.btn-icon--m .btn-icon__inner {
+  width: var(--color-size-space-1000);
+  height: var(--color-size-space-1000);
+}
+.btn-icon--m .btn-icon__icon,
+.btn-icon--m .btn-icon__spinner {
+  width: var(--color-size-icon-250);
+  height: var(--color-size-icon-250);
+}
+
+.btn-icon--l .btn-icon__inner {
+  width: var(--color-size-space-1400);
+  height: var(--color-size-space-1400);
+  padding-bottom: var(--color-size-space-100);
+}
+.btn-icon--l .btn-icon__icon,
+.btn-icon--l .btn-icon__spinner {
+  width: var(--color-size-icon-300);
+  height: var(--color-size-icon-300);
+}
+
+/* Bottom inner-shadow bevel, Primary & Secondary only. Figma value, not a token. */
+
+.btn-icon--primary.btn-icon--s .btn-icon__inner,
+.btn-icon--primary.btn-icon--m .btn-icon__inner,
+.btn-icon--secondary.btn-icon--s .btn-icon__inner,
+.btn-icon--secondary.btn-icon--m .btn-icon__inner {
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+}
+.btn-icon--primary.btn-icon--l .btn-icon__inner,
+.btn-icon--secondary.btn-icon--l .btn-icon__inner {
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.15);
+}
+
+/*
+ * TODO(design): border.default (Primary's stroke), interactive.pressedInverse
+ * (Primary's pressed-fill overlay), and background.stacking (Secondary's
+ * pressed-fill overlay) each carry an additional Figma layer-opacity (0.102,
+ * matching the token's own baked-in alpha) stacked on top, compounding to
+ * roughly 1% effective alpha -- at or below the threshold of visibility. All
+ * three are held here at their single-layer value (the token alone, visibly
+ * perceptible) rather than reproducing the compounded result.
+ *
+ * Two open questions for whoever owns the Figma file, both unresolved:
+ * 1. Is the doubled opacity intentional anywhere, or a layer-opacity slider
+ *    left on by habit?
+ * 2. Secondary/Pressed specifically: in Figma's own raw paint order, the
+ *    background.stacking overlay is listed BEFORE (i.e. behind/under, per
+ *    the Figma API's back-to-front fills ordering) the opaque
+ *    background.surface fill -- so the overlay is currently invisible in
+ *    Figma regardless of the opacity question above. CSS can't reproduce
+ *    that: `background-image` always paints above `background-color`
+ *    regardless of source order, so the code below renders a visible press
+ *    effect that Figma itself currently does not show. Is the fill order in
+ *    Figma correct, or should the overlay be on top there too?
+ * Neither question is resolved here -- do not change without both answers.
+ */
+
+/* Primary */
+
+.btn-icon--primary .btn-icon__inner {
+  background-color: var(--color-interactive-primary);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-interactive-on-primary);
+}
+.btn-icon--primary.btn-icon--pressed .btn-icon__inner {
+  background-image: linear-gradient(var(--color-interactive-pressed-inverse), var(--color-interactive-pressed-inverse));
+}
+.btn-icon--primary.btn-icon--disabled .btn-icon__inner {
+  background-color: var(--color-background-surface);
+  background-image: none;
+  border: none;
+  color: var(--color-text-disabled);
+}
+.btn-icon--primary.btn-icon--loading .btn-icon__inner {
+  background-color: var(--color-interactive-primary);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-interactive-on-primary);
+}
+
+/* Secondary */
+
+.btn-icon--secondary .btn-icon__inner {
+  background-color: var(--color-background-surface);
+  color: var(--color-text-primary);
+}
+.btn-icon--secondary.btn-icon--pressed .btn-icon__inner {
+  background-image: linear-gradient(var(--color-background-stacking), var(--color-background-stacking));
+}
+.btn-icon--secondary.btn-icon--disabled .btn-icon__inner {
+  background-color: var(--color-background-surface);
+  color: var(--color-text-disabled);
+}
+.btn-icon--secondary.btn-icon--loading .btn-icon__inner {
+  background-color: var(--color-background-surface);
+  color: var(--color-text-primary);
+}
+
+/* Tertiary (ghost, no fill) */
+
+.btn-icon--tertiary .btn-icon__inner {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+.btn-icon--tertiary.btn-icon--pressed .btn-icon__inner {
+  color: var(--color-text-primary);
+}
+.btn-icon--tertiary.btn-icon--disabled .btn-icon__inner {
+  color: var(--color-text-disabled);
+}
+.btn-icon--tertiary.btn-icon--loading .btn-icon__inner {
+  color: var(--color-text-primary);
+}

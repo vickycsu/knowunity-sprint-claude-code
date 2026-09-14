@@ -114,7 +114,7 @@ function TypeSection() {
           const lineHeight = dimensionValue(resolveValue(typography.lineHeight as TokenValue))
           const fontFamily = String(resolveValue(typography.fontFamily as TokenValue))
           const fontWeight = String(resolveValue(typography.fontWeight as TokenValue))
-          const weight = fontWeight === 'heavy' ? 900 : fontWeight === 'bold' ? 700 : fontWeight === 'semi-bold' ? 600 : 400
+          const weight = Number(fontWeight)
 
           return (
             <article className="type-token" key={name}>
