@@ -3,6 +3,10 @@
 
 Mobile iOS voice active-recall step inside Knowunity's study plan. After a run of completed topics, the student explains the concepts out loud. Knowie replies in text. Recall is mocked.
 
+## Storybook tools
+
+When working on UI, use the storybook tools to read the component library before answering or writing anything. Never assume a component prop exists. Query the documentation, and use only props that are documented or shown in a story. If a prop isn't there, stop and ask me.
+
 ## Hard rules
 
 - Mobile only, 390px wide, dark mode only. No light mode, no desktop.

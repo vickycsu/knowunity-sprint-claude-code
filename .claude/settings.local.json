@@ -5,5 +5,9 @@
       "Bash(git --version)",
       "Bash(npx --yes create-next-app@latest . --typescript --app --eslint --tailwind --src-dir --import-alias \"@/*\" --use-npm --yes)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "storybook"
+  ],
+  "enableAllProjectMcpServers": true
 }
