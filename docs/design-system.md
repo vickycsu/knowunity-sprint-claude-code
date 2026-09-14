@@ -16,6 +16,7 @@ chips — a short filter, tag, or selection state. Topic labels, selected answer
 iconSlot — any standalone icon on screen. Never place a raw icon shape directly; this component controls sizing and spacing.
 mascotSlot — anywhere Knowie appears and needs to react to something (correct, incorrect, listening, idle). Check both the size property and the nested pose property when you duplicate an instance — they're independent.
 progressIndicator — overall completion through a session or a set. It only has five fixed progress stops (0/25/50/75/100), not a continuous range.
+sessionBar — the fixed header for every screen in the recall loop: close control, session progress, and the XP chip for the current term. See "Components added this sprint" for the full writeup.
 snackbar — a short, temporary system message the student doesn't need to act on. Never use it for something that needs a decision.
 textBlock — a title with an optional supporting line underneath.
 appBar — exists in the library but isn't used in any current screen. Screens currently build their own nav bar by hand. If you start using appBar, you're introducing a pattern the rest of the file doesn't follow yet — do that on purpose, not by accident.
@@ -54,8 +55,16 @@ What each state means: Listening is the glowing state, live while audio is being
 Don't: Don't reuse it as a generic loading spinner or decorative glow elsewhere. It signals one specific thing: whether the mic is live right now.
 Open question: the Listening bloom's gradient fill and its drop shadow color have no matching token in tokens/tokens.json. That's a system-owner conversation, not something to resolve by substituting the nearest violet primitive. Flag it before treating the color as final.
 Known gaps: no visual difference exists between "listening and picking up sound" and "listening but hearing silence." No transition state exists between tapping "Tap to send" and the next screen appearing. No state exists for a hardware interruption mid-recording, like a mic disconnecting.
+sessionBar
+
+No variant axis, no properties of its own. It composes a hand-built Close control, a nested progressIndicator instance, and a nested chips instance (the XP chip) — change progress or XP by editing those nested instances directly, the same way you'd edit a button inside buttonGroup, rather than adding a property to sessionBar itself.
+
+What it is: The fixed header used across the recall loop, combining a close control, session progress, and the XP chip for the current term.
+When to use it: Use on every screen in the Ask & Answer loop and its result and edge-case screens. To change progress or XP state, select into the nested Progress or XP Chip instance and set its own properties.
+Don't: Don't add a variant for hidden progress, a different thickness, or a missing chip. Thickness is fixed at 24 with the counter always visible.
+Known gap: the Close control isn't an instance of buttonIcon — it's a hand-built 44px frame with an 18px icon, and neither size matches any token in tokens/tokens.json (the icon scale is 8/12/16/20/24/32; the space scale has 40 and 48, not 44). Flag this to the system owner rather than treating either raw number as settled.
 Naming and structure conventions
-Component names are camelCase nouns naming the object: button, buttonIcon, iconSlot, mascotSlot, skeletonLine, recordingControl. Follow this pattern for anything new.
+Component names are camelCase nouns naming the object: button, buttonIcon, iconSlot, mascotSlot, skeletonLine, recordingControl, sessionBar. Follow this pattern for anything new.
 Variant axis values are Title Case: Primary, Secondary, Default, Pressed, Loading, Listening, Paused.
 Boolean properties are prefixed show: showLeftIcon, showCaption, showBottomNavSlot. A boolean that toggles visibility of something should read as a yes/no question about that thing being shown.
 Exposed TEXT properties are named Text, matching chips. The layer it drives is named Label, Title Case, regardless of what the component itself is called. Bind the property to that layer's characters before combining variants into a set, not after — each variant gets its own default value for the property even though the property itself is shared across the set once combined.

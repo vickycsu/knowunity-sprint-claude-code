@@ -1,0 +1,31 @@
+.mascot-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--color-size-space-300);
+}
+
+.mascot-slot__pose {
+  display: block;
+  height: auto;
+}
+
+.mascot-slot--xl {
+  width: var(--color-size-space-1600);
+  height: var(--color-size-space-1600);
+}
+
+.mascot-slot--2xl {
+  width: var(--color-size-illustration-1500);
+  height: var(--color-size-illustration-1500);
+}
+
+.mascot-slot--3xl {
+  width: var(--color-size-illustration-2500);
+  height: var(--color-size-illustration-2500);
+}
+
+.mascot-slot--4xl {
+  width: var(--color-size-illustration-4000);
+  height: var(--color-size-illustration-4000);
+}

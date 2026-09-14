@@ -1,0 +1,68 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--color-size-radius-full);
+  border: none;
+}
+
+.chip--xxs {
+  height: var(--color-size-space-500);
+  min-width: var(--color-size-space-500);
+  padding: 0 var(--color-size-space-150);
+  gap: var(--color-size-space-050);
+  font: var(--color-typeScale-caption-s-bold);
+}
+
+.chip--xs {
+  height: var(--color-size-space-600);
+  min-width: var(--color-size-space-600);
+  padding: 0 var(--color-size-space-200);
+  gap: var(--color-size-space-100);
+  font: var(--color-typeScale-caption-s-bold);
+}
+
+.chip--s {
+  height: var(--color-size-space-800);
+  min-width: var(--color-size-space-800);
+  padding: 0 var(--color-size-space-300);
+  gap: var(--color-size-space-100);
+  font: var(--color-typeScale-caption-m-bold);
+}
+
+.chip--m {
+  height: var(--color-size-space-1000);
+  min-width: var(--color-size-space-1000);
+  padding: 0 var(--color-size-space-400);
+  gap: var(--color-size-space-125);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.chip {
+  font-family: var(--color-font-family-display);
+}
+
+.chip--inactive {
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+}
+
+.chip--primary.chip--active {
+  background: var(--color-interactive-primary);
+  color: var(--color-interactive-on-primary);
+}
+
+.chip--pro.chip--active {
+  background: var(--color-pro-bold);
+  color: var(--color-pro-on-bold);
+}
+
+.chip__label {
+  white-space: nowrap;
+}
+
+.chip__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,36 @@
+.icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-slot--100 {
+  width: var(--color-size-icon-100);
+  height: var(--color-size-icon-100);
+}
+
+.icon-slot--150 {
+  width: var(--color-size-icon-150);
+  height: var(--color-size-icon-150);
+}
+
+.icon-slot--200 {
+  width: var(--color-size-icon-200);
+  height: var(--color-size-icon-200);
+}
+
+.icon-slot--250 {
+  width: var(--color-size-icon-250);
+  height: var(--color-size-icon-250);
+}
+
+.icon-slot--300 {
+  width: var(--color-size-icon-300);
+  height: var(--color-size-icon-300);
+}
+
+.icon-slot--400 {
+  width: var(--color-size-icon-400);
+  height: var(--color-size-icon-400);
+}

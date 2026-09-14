@@ -1,0 +1,56 @@
+.recording-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.recording-control__label {
+  font: var(--color-typeScale-body-s-bold);
+  font-family: var(--color-font-family-display);
+  white-space: nowrap;
+}
+
+/* Listening: a headroom frame around a centered, glowing bloom ellipse */
+
+.recording-control--listening {
+  position: relative;
+  width: var(--color-size-illustration-2813);
+  height: var(--color-size-illustration-2813);
+  background: none;
+}
+
+.recording-control--listening .recording-control__bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--color-size-illustration-2225);
+  height: var(--color-size-illustration-2225);
+  transform: translate(-50%, -50%);
+  border-radius: var(--color-size-radius-full);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-brand-on-subtle),
+    var(--color-interactive-primary-active)
+  );
+  box-shadow: 0 0 var(--color-size-blur-650) var(--color-accent-brand-bold);
+}
+
+.recording-control--listening .recording-control__label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-text-on-accent);
+}
+
+/* Paused: a flat, non-glowing circle */
+
+.recording-control--paused {
+  width: var(--color-size-illustration-2250);
+  height: var(--color-size-illustration-2250);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-background-surface);
+  color: var(--color-text-secondary);
+}

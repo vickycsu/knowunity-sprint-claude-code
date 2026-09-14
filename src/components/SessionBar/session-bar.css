@@ -1,0 +1,30 @@
+.session-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--color-size-space-250) var(--color-size-space-400);
+  gap: var(--color-size-space-300);
+}
+
+.session-bar__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: var(--color-size-space-200);
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-background-stacking);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.session-bar__progress {
+  flex: 1 1 auto;
+}
+
+.session-bar__xp {
+  flex-shrink: 0;
+}
