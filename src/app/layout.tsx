@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Greed Standard, the only family in tokens.json (font.family.default).
+// Weights limited to the set sprint-context allows, plus Heavy for display-l.
+const greed = localFont({
+  variable: "--font-greed",
+  display: "swap",
+  src: [
+    { path: "./fonts/GreedStandard-TRIAL-Light.otf", weight: "300", style: "normal" },
+    { path: "./fonts/GreedStandard-TRIAL-LightItalic.otf", weight: "300", style: "italic" },
+    { path: "./fonts/GreedStandard-TRIAL-Regular.otf", weight: "400", style: "normal" },
+    { path: "./fonts/GreedStandard-TRIAL-RegularItalic.otf", weight: "400", style: "italic" },
+    { path: "./fonts/GreedStandard-TRIAL-SemiBold.otf", weight: "600", style: "normal" },
+    { path: "./fonts/GreedStandard-TRIAL-SemiBoldItalic.otf", weight: "600", style: "italic" },
+    { path: "./fonts/GreedStandard-TRIAL-Bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/GreedStandard-TRIAL-BoldItalic.otf", weight: "700", style: "italic" },
+    { path: "./fonts/GreedStandard-TRIAL-Heavy.otf", weight: "900", style: "normal" },
+    { path: "./fonts/GreedStandard-TRIAL-HeavyItalic.otf", weight: "900", style: "italic" },
+  ],
 });
 
 export const metadata: Metadata = {
@@ -19,10 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${greed.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
