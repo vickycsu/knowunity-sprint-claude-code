@@ -52,6 +52,7 @@ export function Button({
       className={classes}
       disabled={isDisabled}
       aria-busy={isLoading}
+      aria-label={isLoading ? cta : undefined}
       {...rest}
     >
       <span className="btn__inner">

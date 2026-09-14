@@ -175,7 +175,7 @@
   --color-background-stacking: rgba(255, 255, 255, 0.102);
   --color-background-input: #1a1c26;
   --color-interactive-primary: #f4f2ff;
-  --color-interactive-secondary: rgba(255, 255, 255, 0.102);
+  --color-interactive-secondary: #22242f;
   --color-interactive-destructive: #ff6b6b;
   --color-interactive-disabled: rgba(255, 255, 255, 0.102);
   --color-interactive-on-primary: #090c18;
@@ -185,7 +185,7 @@
   --color-interactive-primary-hover: #e4e0ff;
   --color-interactive-primary-active: #d2ccfa;
   --color-interactive-secondary-hover: rgba(255, 255, 255, 0.1804);
-  --color-interactive-secondary-active: rgba(255, 255, 255, 0.2392);
+  --color-interactive-secondary-active: #15103a;
   --color-interactive-destructive-hover: #ff8585;
   --color-interactive-destructive-active: #e85555;
   --color-interactive-on-destructive: #2a0808;
