@@ -1,0 +1,81 @@
+/* Greed Standard-TRIAL, the family referenced by font.family in tokens/tokens.json. */
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-LightItalic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-RegularItalic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-SemiBoldItalic.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-BoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-Heavy.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Standard-TRIAL";
+  src: url("/fonts/greed-standard/GreedStandard-TRIAL-HeavyItalic.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}

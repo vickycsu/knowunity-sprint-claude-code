@@ -1,5 +1,6 @@
 import type { Decorator, Preview } from '@storybook/nextjs-vite'
 import '../build/css/tokens.css'
+import '../src/app/fonts.css'
 
 const withProjectSurface: Decorator = (Story, context) => (
   <div
