@@ -3,7 +3,7 @@
 ## What this is
 
 A mobile iOS voice active-recall step inside Knowunity’s study plan.
-The student explains recently learned concepts out loud and receives text feedback from Knowie. Design source of truth: Figma file `SRxdKe78xKqws8V2CGvFCi`, page **Flow_v2** (node 15666:908). Every value comes from `tokens.json`.
+The student explains recently learned concepts out loud and receives text feedback from Knowie. Design source of truth: Figma file `SRxdKe78xKqws8V2CGvFCi`, page **Flow_v2** (node 15666:908). Every value comes from `tokens/tokens.json`.
 
 ## Concept
 
@@ -44,7 +44,7 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 ### System
 - Navigation calls the section “Topic,” 
 - No subtext unless it adds information not already shown.
-- Use semantic tokens from tokens.json; never approximate color, spacing, radius, or type values.
+- Use semantic tokens from tokens/tokens.json; never approximate color, spacing, radius, or type values.
 - text.link uses violet.500-2; text.tertiary resolves through color/alpha/light-50.
 - Check tertiary text contrast on cards, not only on the page background.
 - Type is Greed Standard: Light, Regular, SemiBold, Bold, and Italic only.

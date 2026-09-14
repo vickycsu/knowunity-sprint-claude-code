@@ -1,10 +1,10 @@
 Knowie design system rules
 
-This file covers behavior: which component to use, how the scaffold works, how things get named, and what never to do. It does not repeat any value. For colors, sizes, or type scale, look in tokens.json and reference the token by name.
+This file covers behavior: which component to use, how the scaffold works, how things get named, and what never to do. It does not repeat any value. For colors, sizes, or type scale, look in tokens/tokens.json and reference the token by name.
 
 The two layers, and which one you touch
 
-tokens.json has two layers. Primitives hold raw values. Semantic tokens reference primitives by name and describe a role — what the value is for, not what it looks like.
+tokens/tokens.json has two layers. Primitives hold raw values. Semantic tokens reference primitives by name and describe a role — what the value is for, not what it looks like.
 
 Components consume the semantic layer only. A component never points at a primitive directly, and a screen never hardcodes a raw value. If a component needs a color, it asks for interactive.primary, not color.violet.50-2 — even though those two currently resolve to the same value. The semantic name is what lets that value change later without touching every screen that uses it.
 
@@ -38,7 +38,7 @@ One caution: the slot pickers in Figma list "preferred" components for each slot
 Components added this sprint
 skeletonLine
 
-No variant axis, no properties. Fixed height, free width — resize each instance to fit, and stack as many as a given moment needs. Look up its exact height and corner radius in tokens.json; as of this sprint neither value has a matching token, so both are unbound raw numbers on the component. Flag that gap to the system owner before treating it as settled.
+No variant axis, no properties. Fixed height, free width — resize each instance to fit, and stack as many as a given moment needs. Look up its exact height and corner radius in tokens/tokens.json; as of this sprint neither value has a matching token, so both are unbound raw numbers on the component. Flag that gap to the system owner before treating it as settled.
 
 What it is: A single rounded placeholder bar standing in for a line of text while Knowie's response loads.
 When to use it: Use inside the Knowie bubble on Processing. Resize each instance to whatever width fits, and stack as many as the moment needs, there's no fixed count.
@@ -52,7 +52,7 @@ What it is: The circular, glowing affordance shown while Knowie is actively reco
 When to use it: Use only inside the live recording screens. Listening while audio is being captured, Paused when the student pauses mid-answer. Set the Text property to match the state's copy.
 What each state means: Listening is the glowing state, live while audio is being captured. Paused is the flat, non-glowing state — the frame's fill is background.surface — shown when the student pauses mid-answer.
 Don't: Don't reuse it as a generic loading spinner or decorative glow elsewhere. It signals one specific thing: whether the mic is live right now.
-Open question: the Listening bloom's gradient fill and its drop shadow color have no matching token in tokens.json. That's a system-owner conversation, not something to resolve by substituting the nearest violet primitive. Flag it before treating the color as final.
+Open question: the Listening bloom's gradient fill and its drop shadow color have no matching token in tokens/tokens.json. That's a system-owner conversation, not something to resolve by substituting the nearest violet primitive. Flag it before treating the color as final.
 Known gaps: no visual difference exists between "listening and picking up sound" and "listening but hearing silence." No transition state exists between tapping "Tap to send" and the next screen appearing. No state exists for a hardware interruption mid-recording, like a mic disconnecting.
 Naming and structure conventions
 Component names are camelCase nouns naming the object: button, buttonIcon, iconSlot, mascotSlot, skeletonLine, recordingControl. Follow this pattern for anything new.
@@ -61,12 +61,12 @@ Boolean properties are prefixed show: showLeftIcon, showCaption, showBottomNavSl
 Exposed TEXT properties are named Text, matching chips. The layer it drives is named Label, Title Case, regardless of what the component itself is called. Bind the property to that layer's characters before combining variants into a set, not after — each variant gets its own default value for the property even though the property itself is shared across the set once combined.
 A variant doesn't need to mirror every layer of every other variant. recordingControl's Listening variant has a Bloom layer; Paused doesn't, because it's a flat filled circle with no glow. Layer names only need to match across variants where the same property has to bind consistently — here, that's Label for the shared Text property.
 A component with no variant axis and no properties is a valid pattern, not an unfinished one — skeletonLine is one shape, one binding, resized freely per instance. Don't add a variant axis or a property just because other components in the file have them.
-Semantic tokens are a lowercase, slash-delimited path: category first, then role — background.page, interactive.onPrimary, feedback.error.bold. Match this shape for anything new; check tokens.json for the exact existing groups before adding a sibling.
+Semantic tokens are a lowercase, slash-delimited path: category first, then role — background.page, interactive.onPrimary, feedback.error.bold. Match this shape for anything new; check tokens/tokens.json for the exact existing groups before adding a sibling.
 Primitive tokens keep the category prefix already in use for that category — color.* stays lowercase, Space.*/Radius.*/Icon.* keep their capitalized prefix. Don't invent a new casing style for a category that already has one.
 Labels, buttons, and headings are sentence case. Capitals only for proper nouns — Knowie, PRO.
 A pill or stadium shape with no matching radius token should bind to Radius.Full rather than a raw number, even when the shape's actual height means the rendered radius is some other fixed value. Figma clamps a full radius down to half the shortest side automatically, so the token still resolves to the correct visual result without hardcoding that half-height number. skeletonLine's corner radius uses this pattern.
 Never do this
-Never invent a value that isn't in tokens.json. If a color, size, or type style you need doesn't exist, say so and ask rather than eyeballing a close number.
+Never invent a value that isn't in tokens/tokens.json. If a color, size, or type style you need doesn't exist, say so and ask rather than eyeballing a close number.
 Never use a CSS fallback like var(--token, #333). If a token resolves to nothing, that's a bug in the token or the binding — fix it. A fallback hides the break instead of surfacing it.
 Sentence case on every label, button, and heading. Capitals only for proper nouns.
 Never put an appearance word in a semantic name. "Purple," "dark," "small" — those describe how a primitive looks and belong only in the primitive layer (color.violet.500). A semantic name describes a role (interactive.primary), never a look.

@@ -6,7 +6,7 @@ Mobile iOS voice active-recall step inside Knowunity's study plan. After a run o
 ## Hard rules
 
 - Mobile only, 390px wide, dark mode only. No light mode, no desktop.
-- Every color, size, spacing, radius and type value comes from tokens.json, through a semantic token. If nothing matches, stop and tell me.
+- Every color, size, spacing, radius and type value comes from tokens/tokens.json, through a semantic token. If nothing matches, stop and tell me.
 - Build from the components listed in docs/design-system.md. If nothing fits, stop and tell me before making a new one.
 - The recall is mocked. No speech-to-text, no audio, no model calls.
 - Sentence case on every label, button and heading. Capitals only for proper nouns (Knowie, PRO).
@@ -24,7 +24,7 @@ Mobile iOS voice active-recall step inside Knowunity's study plan. After a run o
 
 ## Where things are
 
-- tokens.json — semantic design tokens. Read before writing styles.
+- tokens/tokens.json — semantic design tokens. Read before writing styles.
 - docs/sprint-context.md — locked decisions and scope. Read first every session.
 - docs/design-system.md — components, naming conventions and component rules. Read before building UI.
 - docs/design-brief.md — problem, constraints and success metrics. Read when sprint-context does not cover the question.

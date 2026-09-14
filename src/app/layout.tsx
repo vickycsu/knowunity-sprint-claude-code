@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-// Greed Standard, the only family in tokens.json (font.family.default).
+// Greed Standard, the only family in tokens/tokens.json (font.family.default).
 // Weights limited to the set sprint-context allows, plus Heavy for display-l.
 const greed = localFont({
   variable: "--font-greed",
