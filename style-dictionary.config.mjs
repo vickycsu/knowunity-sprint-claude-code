@@ -30,6 +30,18 @@ const formatCssValue = (token) => {
       return `${rawValue.value}${rawValue.unit}`;
     }
 
+    if ('gradientType' in rawValue && Array.isArray(rawValue.stops)) {
+      const stopColors = rawValue.stops
+        .map((stop) => (stop && typeof stop === 'object' ? formatCssValue({ $value: stop.color }) : null))
+        .filter((value) => value !== null);
+
+      if (stopColors.length === 0) {
+        return null;
+      }
+
+      return `${rawValue.gradientType}-gradient(${rawValue.angle}deg, ${stopColors.join(', ')})`;
+    }
+
     if ('fontFamily' in rawValue || 'fontSize' in rawValue || 'fontWeight' in rawValue) {
       const parts = [];
 

@@ -1,0 +1,89 @@
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--color-size-space-100);
+  border-radius: var(--color-size-radius-600);
+}
+
+.summary-card--good {
+  background: var(--color-feedback-success-bold);
+}
+
+.summary-card--partial {
+  background: var(--color-feedback-partial-bold);
+}
+
+.summary-card--needs-practice {
+  background: var(--color-feedback-error-bold);
+}
+
+.summary-card__header {
+  text-align: center;
+  padding: var(--color-size-space-300) 0;
+  font: var(--color-typeScale-headline-xxs-bold);
+  text-transform: uppercase;
+}
+
+.summary-card--good .summary-card__header {
+  color: var(--color-feedback-success-on-bold);
+}
+
+.summary-card--partial .summary-card__header {
+  color: var(--color-feedback-partial-on-bold);
+}
+
+.summary-card--needs-practice .summary-card__header {
+  color: var(--color-feedback-error-on-bold);
+}
+
+.summary-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-100);
+}
+
+.summary-card__row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--color-size-space-300);
+  padding: var(--color-size-space-400);
+  border: none;
+  border-radius: var(--color-size-radius-600);
+  font: var(--color-typeScale-body-m-regular);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.summary-card--good .summary-card__row {
+  background: var(--color-feedback-success-on-bold);
+  color: var(--color-feedback-success-on-subtle);
+}
+
+.summary-card--partial .summary-card__row {
+  background: var(--color-feedback-partial-on-bold);
+  color: var(--color-feedback-partial-on-subtle);
+}
+
+.summary-card--needs-practice .summary-card__row {
+  background: var(--color-feedback-error-on-bold);
+  color: var(--color-feedback-error-on-subtle);
+}
+
+.summary-card__term {
+  flex: 1 1 auto;
+  text-align: left;
+  color: var(--color-text-primary);
+}
+
+.summary-card__chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  transition: transform 150ms ease;
+}
+
+.summary-card__chevron--expanded {
+  transform: rotate(180deg);
+}

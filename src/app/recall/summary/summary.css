@@ -1,0 +1,196 @@
+.summary {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  margin: 0 auto;
+  background: var(--color-background-page);
+}
+
+.summary__header-bar {
+  display: flex;
+  padding: var(--color-size-space-250) var(--color-size-space-400);
+}
+
+.summary__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--color-size-space-1200);
+  height: var(--color-size-space-1200);
+  padding: var(--color-size-space-200);
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-background-stacking);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.summary__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  padding: 0 var(--color-size-space-400) var(--color-size-space-400);
+}
+
+.summary__headline {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-xl);
+  text-align: center;
+}
+
+.summary__spacer {
+  flex: 1 1 auto;
+  min-height: var(--color-size-space-1600);
+}
+
+.summary__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-250);
+  padding: var(--color-size-space-300);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-600);
+}
+
+.summary__detail-actions {
+  display: flex;
+  gap: var(--color-size-space-200);
+}
+
+.summary__detail-actions .btn {
+  flex: 1 1 0;
+}
+
+.summary__detail-said {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-bold);
+}
+
+.summary__detail-label {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-caption-m-regular);
+}
+
+.summary__detail-answer {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-regular);
+}
+
+.summary__sheet-scrim {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--color-background-scrim);
+}
+
+.summary__sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  padding: var(--color-size-space-300) var(--color-size-space-400) var(--color-size-space-600);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-800) var(--color-size-radius-800) 0 0;
+}
+
+.summary__sheet-handle {
+  align-self: center;
+  width: var(--color-size-space-1200);
+  height: var(--color-size-space-100);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-border-strong);
+}
+
+.summary__sheet-header {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-300);
+}
+
+.summary__sheet-title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-xs-bold);
+}
+
+.summary__sheet-composing {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-250);
+}
+
+.summary__sheet-composing-text {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-caption-m-regular);
+}
+
+.summary__sheet-divider {
+  height: var(--color-size-stroke-border);
+  background: var(--color-border-default);
+}
+
+.summary__sheet-definitions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+}
+
+.summary__sheet-definition {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-050);
+}
+
+.summary__sheet-definition-term {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.summary__sheet-definition-copy {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.summary__sheet-ask {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-250);
+  padding: var(--color-size-space-300) var(--color-size-space-400);
+  background: var(--color-background-input);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
+  border-radius: var(--color-size-radius-full);
+  color: var(--color-text-tertiary);
+}
+
+.summary__sheet-ask-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-tertiary);
+  font: var(--color-typeScale-body-s-regular);
+  cursor: default;
+}
+
+.summary__sheet-ask-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.summary__sheet-ask-input:focus {
+  outline: none;
+}

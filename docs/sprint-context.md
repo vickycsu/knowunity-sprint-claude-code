@@ -34,6 +34,32 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 - Each hint restates only the missing part, because repeating the full question or revealing the answer weakens retrieval.
 - Knowie quotes the student’s own words before the follow-up question, because the student needs to see which part of their answer was accepted.
 
+### Voice states (scope locked 2026-09-14)
+
+Triage of the state list in docs/voice-ux.md. This section is the source of truth where the two disagree.
+
+Build:
+- Idle (mic ready, prompt shown)
+- Recording / listening
+- Pause / resume — keeps the current take; the student stops speaking temporarily and resumes into the same take. Committed flow; overrides the "out of scope" row in voice-ux.md.
+- Processing
+- Result: pass
+- Result: partial (hint 1, hint 2)
+- Result: fail / answer revealed
+- Cancel / discard + re-record before sending — throws the current take away and starts a fresh one. Distinct from pause: pause keeps the take, cancel discards it. Both are required.
+- Text fallback turn
+- Mic permission primer + mocked iOS permission sheet — designed and mocked in the web app; no real native permission flow is engineered. The primer is an in-context sheet over the Prompt screen on the first mic tap, not a standalone start screen, so it stays inside the "no start sheet" rule above.
+- Permission denied → route to text
+- Skip a term
+
+If time:
+- Empty / silent recording
+- Judge slow / timeout — reuses the Processing pattern with a retry, no new visual system.
+
+Not a separate designed state:
+- Noisy / garbled transcript — covered by the Result screens already showing the transcript plus generous judging.
+- Dropped network — covered by "Leaving mid-session" saving progress; no dedicated screen.
+
 ### Outcome
 - Summary has three buckets: Good explanations, Needed a hint, and Needs practice, because the student needs an honest signal of how well they recalled each concept.
 - Tapping a concept expands it in place; “Explain more” opens a bottom sheet over the summary.
@@ -59,4 +85,8 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 - Voice output or a two-way voice conversation.
 - Auto-detection of when the student has finished speaking.
 - Full coverage of every possible voice edge case.
+- Mic hardware busy (on a call, etc.). Known gap.
+- Student switching language mid-answer. Known gap.
+- A dedicated screen for noisy / garbled transcript or for dropped network (see Voice states).
+- A real native permission flow. The primer and iOS sheet are visual mocks.
 - Naming-convention normalization or Display L removal.

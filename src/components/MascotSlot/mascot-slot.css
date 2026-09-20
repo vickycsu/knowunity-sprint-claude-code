@@ -29,3 +29,26 @@
   width: var(--color-size-illustration-4000);
   height: var(--color-size-illustration-4000);
 }
+
+/* A calm, subtle bob during "thinking" — voice-ux.md asks for a visible,
+   unmistakable processing state; standby stays static since it's the
+   resting pose everywhere else it's used. */
+.mascot-slot--thinking .mascot-slot__pose {
+  animation: mascot-slot-thinking-bob 1.6s ease-in-out infinite;
+}
+
+@keyframes mascot-slot-thinking-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-slot--thinking .mascot-slot__pose {
+    animation: none;
+  }
+}

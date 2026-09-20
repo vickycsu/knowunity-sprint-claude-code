@@ -3,7 +3,7 @@ import { IconSlot, type IconSlotSize } from "../IconSlot/IconSlot";
 import "./chips.css";
 
 export type ChipsSize = "XXS" | "XS" | "S" | "M";
-export type ChipsColor = "Primary" | "pro";
+export type ChipsColor = "Primary" | "pro" | "Info" | "Success" | "Error";
 
 const ICON_SIZE_BY_CHIP_SIZE: Record<ChipsSize, IconSlotSize> = {
   XXS: "150",

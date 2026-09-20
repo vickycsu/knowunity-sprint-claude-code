@@ -1,0 +1,26 @@
+.skeleton-line {
+  height: var(--color-size-space-400);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-interactive-loading);
+  /* voice-ux.md requires a visibly animated loading state, not a static
+     placeholder ("a skeleton/animated state, not a dead spinner") — this
+     component had no animation at all until now. Plain opacity pulse,
+     no new color token needed. */
+  animation: skeleton-line-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-line-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line {
+    animation: none;
+  }
+}

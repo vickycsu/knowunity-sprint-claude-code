@@ -7,7 +7,7 @@ const DESCRIPTION = `**What it is:** A reusable container for Knowie with four s
 
 **Don't:** Don't assume that changing the mascot size changes its expression or state. Size and mascot state should be treated as separate properties.
 
-**Audit note:** Homie's instance-swap property has 16 pose options in Figma; this product only uses \`standby\`.`;
+**Audit note:** Homie's instance-swap property has 16 pose options in Figma; this product wires up \`standby\` and \`thinking\` — the rest exist as art in \`public/images/\` but aren't exposed yet (see \`docs/component-proposals.md\` #4).`;
 
 const meta = {
   title: "Components/MascotSlot",
@@ -22,7 +22,7 @@ const meta = {
   },
   argTypes: {
     size: { control: "select", options: ["XL", "2XL", "3XL", "4XL"] },
-    pose: { control: "select", options: ["standby"] },
+    pose: { control: "select", options: ["standby", "thinking"] },
   },
   args: {
     size: "XL",
@@ -44,3 +44,8 @@ export const SizeXL: Story = sizeStory("XL");
 export const Size2XL: Story = sizeStory("2XL");
 export const Size3XL: Story = sizeStory("3XL");
 export const Size4XL: Story = sizeStory("4XL");
+
+export const PoseThinking: Story = {
+  name: "pose=thinking",
+  args: { pose: "thinking" },
+};

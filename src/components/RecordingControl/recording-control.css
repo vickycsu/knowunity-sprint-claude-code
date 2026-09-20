@@ -15,9 +15,18 @@
 /* Listening: a headroom frame around a centered, glowing bloom ellipse */
 
 .recording-control--listening {
+  /* Figma's literal spec is 225px (illustration.2813) with a 178px bloom
+     (illustration.2225) and a 52px glow (blur.650) — matched exactly at
+     first, but reported as too large in practice, particularly the glow
+     bleeding into adjacent controls. Reduced per explicit request: real
+     pixel values, not on the illustration scale (which wasn't designed
+     with a smaller Listening-state size in mind — its existing steps jump
+     from 120 to 178/180, nothing between). Flag to the system owner if
+     this should be reconciled with a real token instead of living as a
+     deviation. */
   position: relative;
-  width: var(--color-size-illustration-2813);
-  height: var(--color-size-illustration-2813);
+  width: 180px;
+  height: 180px;
   background: none;
 }
 
@@ -25,8 +34,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--color-size-illustration-2225);
-  height: var(--color-size-illustration-2225);
+  width: 140px;
+  height: 140px;
   transform: translate(-50%, -50%);
   border-radius: var(--color-size-radius-full);
   background: linear-gradient(
@@ -34,7 +43,7 @@
     var(--color-accent-brand-on-subtle),
     var(--color-interactive-primary-active)
   );
-  box-shadow: 0 0 var(--color-size-blur-650) var(--color-accent-brand-bold);
+  box-shadow: 0 0 32px var(--color-accent-brand-bold);
 }
 
 .recording-control--listening .recording-control__label {
@@ -45,11 +54,15 @@
   color: var(--color-text-on-accent);
 }
 
-/* Paused: a flat, non-glowing circle */
+/* Paused: a flat, non-glowing circle. Sized to match Listening's visible
+   bloom (140px) rather than Figma's own 180px spec, now that Listening's
+   glow was shrunk per explicit request — otherwise Paused reads as larger
+   than Listening despite being the "quieter" state. Same deviation
+   category as the Listening-state shrink above. */
 
 .recording-control--paused {
-  width: var(--color-size-illustration-2250);
-  height: var(--color-size-illustration-2250);
+  width: 140px;
+  height: 140px;
   border-radius: var(--color-size-radius-full);
   background: var(--color-background-surface);
   color: var(--color-text-secondary);

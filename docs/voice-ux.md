@@ -133,6 +133,19 @@ sprint, and you shouldn't try. Here's a bounded list, triaged. **Build the
 "Must" column well; sketch the "If time" column; explicitly note the "Out of
 scope" ones as known gaps** rather than pretending they don't exist.
  
+> **Scope decision, 2026-09-14.** The triage below was written before the flow
+> was committed. The locked version lives in `docs/sprint-context.md` under
+> **Voice states**, which wins where the two disagree. Known conflicts:
+>
+> - **Pause/resume** is marked "Out of scope" below but is part of the committed
+>   flow (Prompt → Recording → Recording paused → Processing → Result). It stays.
+>   Pause keeps the current take; it is not the same as cancel & re-record, which
+>   discards the take. Both are built.
+> - **Mic permission primer** is built as an in-context sheet on the first mic
+>   tap, not a standalone screen, because sprint-context rules out a start sheet.
+> - **Noisy/garbled transcript** and **dropped network** get no dedicated state.
+>   Judge timeout reuses the Processing pattern.
+ 
 | State / edge case | Priority | Notes |
 | --- | --- | --- |
 | Idle (mic ready, prompt shown) | **Must** | The resting state of every term. |
@@ -150,7 +163,7 @@ scope" ones as known gaps** rather than pretending they don't exist.
 | No / dropped network mid-answer | **If time** | Save progress (F7 already implies this). |
 | Mic hardware busy (on a call, etc.) | **Out of scope** | Note as known gap; rare in practice. |
 | Student switches language mid-answer | **Out of scope** | Real (multilingual product) but not a v1 sprint problem. |
-| Pause/resume into one take | **Out of scope** | Brief already defers this. |
+| Pause/resume into one take | ~~Out of scope~~ **Must** (see scope note) | Brief deferred this; the committed flow includes it. Flagged, not silently changed. |
  
 **Rule of thumb for unlisted cases:** the brief already gives you the answer,
 *"when in doubt, give the student a way forward."* If you hit an edge case not

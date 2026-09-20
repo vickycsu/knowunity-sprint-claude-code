@@ -3,8 +3,10 @@ import "./mascot-slot.css";
 
 export type MascotSlotSize = "XL" | "2XL" | "3XL" | "4XL";
 
-// Homie's instance-swap property has 16 options; this product only uses "standby".
-export type MascotSlotPose = "standby";
+// Homie's instance-swap property has 16 options; this product wires up only
+// the poses an actual recall state needs, matched against existing art in
+// public/images/ (see docs/component-proposals.md #4).
+export type MascotSlotPose = "standby" | "thinking";
 
 const SIZE_PX: Record<MascotSlotSize, number> = {
   XL: 64,
@@ -15,6 +17,7 @@ const SIZE_PX: Record<MascotSlotSize, number> = {
 
 const POSE_IMAGE: Record<MascotSlotPose, string> = {
   standby: "/images/standby.png",
+  thinking: "/images/thinking.png",
 };
 
 export interface MascotSlotProps {
@@ -26,7 +29,7 @@ export function MascotSlot({ size = "XL", pose = "standby" }: MascotSlotProps) {
   const px = SIZE_PX[size];
 
   return (
-    <div className={`mascot-slot mascot-slot--${size.toLowerCase()}`}>
+    <div className={`mascot-slot mascot-slot--${size.toLowerCase()} mascot-slot--${pose}`}>
       <Image
         className="mascot-slot__pose"
         src={POSE_IMAGE[pose]}

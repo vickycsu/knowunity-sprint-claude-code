@@ -39,3 +39,4 @@ When working on UI, use the storybook tools to read the component library before
 - src/app/ — prototype implementation.
 - .claude/skills/ — task-specific design skills. Invoke when relevant.
 - AGENTS.md — generated Next.js guidance. Read before writing Next.js code.
+- component-gaps.md — running list of things built inline during a screen build. Read before building a new screen.

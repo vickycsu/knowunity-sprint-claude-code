@@ -1,0 +1,357 @@
+.study-plan {
+  /* Fixed to the viewport height (not min-height) so the body below can
+     scroll internally while the Review Again card and nav bar stay put —
+     that's what makes the card "sticky to the bottom of the screen"
+     rather than just another scrollable section. */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  margin: 0 auto;
+  background: var(--color-background-page);
+}
+
+.study-plan__app-bar {
+  position: relative;
+  padding: var(--color-size-space-200) var(--color-size-space-400);
+}
+
+.study-plan__app-bar-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-100);
+  text-align: center;
+}
+
+.study-plan__kebab,
+.study-plan__back {
+  position: absolute;
+  top: var(--color-size-space-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--color-size-space-1100);
+  height: var(--color-size-space-1100);
+  padding: var(--color-size-space-100);
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.study-plan__kebab {
+  right: var(--color-size-space-400);
+}
+
+.study-plan__back {
+  left: var(--color-size-space-400);
+}
+
+.study-plan__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-s);
+}
+
+.study-plan__meta {
+  /* Gap kept at space-400 per an earlier explicit request, even though
+     Figma's own "after session" frame specs space-200 (8px) here — not
+     reverted just because a Figma detail surfaced later. The "·" separator
+     (added while building Screen 18) is additive, not a replacement for
+     that spacing decision. */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.study-plan__meta-dot {
+  color: var(--color-text-tertiary);
+}
+
+.study-plan__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--color-size-space-100);
+}
+
+.study-plan__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  padding: var(--color-size-space-400) var(--color-size-space-400) var(--color-size-space-300);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.study-plan__tabs {
+  display: flex;
+  gap: var(--color-size-space-600);
+  padding-bottom: var(--color-size-space-200);
+}
+
+.study-plan__tab {
+  padding-bottom: var(--color-size-space-200);
+  color: var(--color-text-tertiary);
+  font: var(--color-typeScale-body-s-bold);
+  border-bottom: var(--color-size-stroke-heavy-border) solid transparent;
+}
+
+.study-plan__tab--active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-border-selected);
+}
+
+.study-plan__topic-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-300);
+  padding: var(--color-size-space-300) var(--color-size-space-500);
+  background: var(--color-background-surface);
+  border: var(--color-size-stroke-border) solid var(--color-border-strong);
+  border-radius: var(--color-size-radius-full);
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.study-plan__topic-pill-label {
+  flex: 1 1 auto;
+}
+
+.study-plan__topic-pill-divider {
+  align-self: stretch;
+  flex-shrink: 0;
+  width: var(--color-size-stroke-border);
+  /* Flex stretch only reaches the tallest sibling's height, not the pill's
+     full padded height — extend past the pill's own vertical padding so the
+     line actually touches the top and bottom edges. */
+  margin-top: calc(-1 * var(--color-size-space-300));
+  margin-bottom: calc(-1 * var(--color-size-space-300));
+  background: var(--color-border-strong);
+}
+
+.study-plan__topic-pill-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--color-text-primary);
+}
+
+.study-plan__path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-400);
+}
+
+.study-plan__node {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.study-plan__node--static {
+  cursor: default;
+}
+
+.study-plan__node-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-050);
+}
+
+.study-plan__node-title {
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.study-plan__node-subtitle {
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-caption-m-regular);
+}
+
+.topic-ring {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--color-size-illustration-800);
+  height: var(--color-size-illustration-800);
+  border-radius: var(--color-size-radius-full);
+  border: var(--color-size-stroke-heavy-border) solid transparent;
+}
+
+.topic-ring--done {
+  /* Icon color corrected from an approximation (text.inverse) to the
+     actual bound variable, confirmed while building Screen 18:
+     accent.brand.on-bold. */
+  background: var(--color-accent-brand-ring-gradient);
+  color: var(--color-accent-brand-on-bold);
+}
+
+.topic-ring--current {
+  background: var(--color-background-stacking);
+  border-color: var(--color-border-selected);
+  color: var(--color-text-primary);
+}
+
+.topic-ring--todo {
+  background: var(--color-background-stacking);
+  color: var(--color-text-secondary);
+}
+
+.study-plan__nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--color-size-space-300) var(--color-size-space-400);
+  background: var(--color-background-page);
+  border-top: var(--color-size-stroke-border) solid var(--color-border-default);
+}
+
+.study-plan__nav-slot {
+  display: inline-flex;
+  color: var(--color-text-secondary);
+}
+
+.study-plan__nav-slot--accent {
+  color: var(--color-border-focus);
+}
+
+.study-plan__avatar {
+  width: var(--color-size-space-600);
+  height: var(--color-size-space-600);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-background-surface);
+}
+
+.study-plan__sheet-scrim {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--color-background-scrim);
+}
+
+.study-plan__sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  padding: var(--color-size-space-300) var(--color-size-space-400) var(--color-size-space-600);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-800) var(--color-size-radius-800) 0 0;
+}
+
+.study-plan__sheet-handle {
+  width: var(--color-size-space-1200);
+  height: var(--color-size-space-100);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-border-strong);
+}
+
+.study-plan__sheet-title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-xs-bold);
+}
+
+.study-plan__sheet-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.study-plan__sheet-row {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  width: 100%;
+  padding: var(--color-size-space-300) 0;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-bold);
+  text-align: left;
+  cursor: pointer;
+}
+
+.study-plan__sheet-row-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.study-plan__review-again {
+  /* No longer inside .study-plan__body — moved out so it (and the nav bar
+     below it) stay fixed at the bottom of the screen while the topic path
+     above scrolls independently, per explicit request ("sticky to the
+     bottom of the screen"). flex-shrink:0 keeps it from being compressed
+     by the scrollable body claiming flex:1 space. */
+  flex-shrink: 0;
+  padding: var(--color-size-space-300) var(--color-size-space-400);
+  background: var(--color-background-page);
+}
+
+.study-plan__review-again-label {
+  /* Figma specs caption-m-bold (12px) here. First bumped to headline-s
+     (21px, matching the screen's title) since 12px read as too small to
+     stand out — that then read as too big, dialed back to headline-xs-bold
+     (18px) as a middle ground. Still a deliberate deviation from Figma's
+     12px, not a reversion to it. Margin left at 0 — the card's own flex
+     `gap` already spaces it from the concept pills below. */
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-xs-bold);
+}
+
+.study-plan__review-again-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-250);
+  padding: var(--color-size-space-300);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-400);
+}
+
+.study-plan__review-again-concept {
+  padding: var(--color-size-space-250) var(--color-size-space-300);
+  background: var(--color-background-stacking);
+  border-radius: var(--color-size-radius-full);
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.study-plan__review-again-start {
+  /* No documented Button variant matches this treatment — Button's variants
+     are off-white (Primary), navy (Secondary), or transparent (Tertiary);
+     none produce this violet fill. Built inline with the real bound colors
+     (accent.brand.bold / accent.brand.on-bold) rather than forcing a
+     mismatched Button variant. */
+  padding: var(--color-size-space-300) 0;
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-accent-brand-bold);
+  color: var(--color-accent-brand-on-bold);
+  font: var(--color-typeScale-body-s-bold);
+  cursor: pointer;
+}

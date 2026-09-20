@@ -26,7 +26,7 @@ const meta = {
   },
   argTypes: {
     size: { control: "select", options: ["XXS", "XS", "S", "M"] },
-    color: { control: "select", options: ["Primary", "pro"] },
+    color: { control: "select", options: ["Primary", "pro", "Info", "Success", "Error"] },
     active: { control: "boolean" },
     showLeftIcon: { control: "boolean" },
     showRightIcon: { control: "boolean" },
@@ -70,6 +70,12 @@ export const SProFalse: Story = variant("S", "pro", false);
 export const SProTrue: Story = variant("S", "pro", true);
 export const MProFalse: Story = variant("M", "pro", false);
 export const MProTrue: Story = variant("M", "pro", true);
+
+// Added for Snackbar's nested chip — Info/Success/Error aren't a full size matrix like
+// Primary/pro above, just the one size (S) Snackbar actually uses.
+export const SInfoTrue: Story = variant("S", "Info", true);
+export const SSuccessTrue: Story = variant("S", "Success", true);
+export const SErrorTrue: Story = variant("S", "Error", true);
 
 // With icons, shown at the default combination
 export const WithIcons: Story = {

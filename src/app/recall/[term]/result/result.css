@@ -1,0 +1,191 @@
+.result {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  margin: 0 auto;
+  background: var(--color-background-page);
+}
+
+.result__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  padding: var(--color-size-space-200) var(--color-size-space-600) var(--color-size-space-800);
+}
+
+.result__verdict {
+  /* No documented component matches this treatment — Chips only offers
+     "inactive" (background.surface) or "active" (solid bold fill), not the
+     subtle-fill + bold-border combination Figma actually uses here. Built
+     inline; all three tones' colors confirmed via bound Figma variables
+     (feedback.success/partial/error .subtle/.bold/.on-subtle). */
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--color-size-space-150);
+  padding: var(--color-size-space-200) var(--color-size-space-400);
+  border: var(--color-size-stroke-border) solid transparent;
+  border-radius: var(--color-size-radius-full);
+}
+
+.result__verdict--success {
+  background: var(--color-feedback-success-subtle);
+  border-color: var(--color-feedback-success-bold);
+  color: var(--color-feedback-success-on-subtle);
+}
+
+.result__verdict--partial {
+  background: var(--color-feedback-partial-subtle);
+  border-color: var(--color-feedback-partial-bold);
+  color: var(--color-feedback-partial-on-subtle);
+}
+
+.result__verdict--error {
+  background: var(--color-feedback-error-subtle);
+  border-color: var(--color-feedback-error-bold);
+  color: var(--color-feedback-error-on-subtle);
+}
+
+.result__verdict-label {
+  font: var(--color-typeScale-caption-m-bold);
+}
+
+.result__quote {
+  align-self: flex-start;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.result__quote--reveal {
+  color: var(--color-text-primary);
+}
+
+.result__empty-transcript {
+  width: 100%;
+  padding: var(--color-size-space-400);
+  background: var(--color-background-input);
+  /* Figma's border here is violet.500 at 45% opacity — no semantic token
+     expresses a translucent violet border (border.selected/accent.brand.bold
+     are the same violet but fully opaque). Real value used directly,
+     same "deliberate exception" pattern as the topic-ring gradient
+     elsewhere in this project. */
+  border: var(--color-size-stroke-border) solid rgba(145, 120, 230, 0.45);
+  border-radius: var(--color-size-radius-400);
+  color: var(--color-text-tertiary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.result__caption {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.result__bubble {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  width: 100%;
+  padding: var(--color-size-space-500);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-600);
+}
+
+.result__copy {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-regular);
+}
+
+.result__spacer {
+  flex: 1 1 auto;
+}
+
+.result__mic-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.result__mic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--color-size-illustration-1300);
+  height: var(--color-size-illustration-1300);
+  padding: 0;
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-interactive-primary);
+  color: var(--color-interactive-on-primary);
+  cursor: pointer;
+}
+
+.result__type-instead {
+  position: absolute;
+  right: var(--color-size-space-700);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--color-size-space-1100);
+  height: var(--color-size-space-1100);
+  padding: 0;
+  box-sizing: border-box;
+  border: var(--color-size-stroke-heavy-border) solid var(--color-text-secondary);
+  border-radius: var(--color-size-radius-full);
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.result__skip {
+  margin-top: var(--color-size-space-700);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+  cursor: pointer;
+}
+
+/* Hint screens (hint1/hint2): a smaller, mic-only button — Figma specs 88px
+   here (not the 104px used on the Prompt-like pass/first-attempt row), and
+   no "Type instead" keyboard icon at all. Flagged in component-gaps.md:
+   dropping the non-voice fallback on a retry conflicts with voice-ux.md's
+   "always offer a non-voice path" principle, but matches the frame exactly. */
+.result__mic--hint {
+  width: var(--color-size-illustration-1100);
+  height: var(--color-size-illustration-1100);
+}
+
+.result__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-800);
+  width: 100%;
+}
+
+.result__actions .btn {
+  width: 100%;
+}
+
+.result__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+  cursor: pointer;
+}

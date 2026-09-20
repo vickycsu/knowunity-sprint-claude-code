@@ -1,0 +1,107 @@
+.courses {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  margin: 0 auto;
+  background: var(--color-background-page);
+}
+
+.courses__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  padding: var(--color-size-space-200) var(--color-size-space-400) var(--color-size-space-300);
+}
+
+.courses__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-m);
+}
+
+.courses__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+}
+
+.courses__row {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-300);
+  width: 100%;
+  /* Figma's row is 60px tall (12px padding + a 36px icon wrapper) — 60 isn't
+     on the spacing scale, so min-height uses the nearest token (64) rather
+     than shrink-wrapping to just the 20px text line, which made the row
+     look disproportionately short next to the 56px button. */
+  min-height: var(--color-size-space-1600);
+  padding: var(--color-size-space-300) var(--color-size-space-400);
+  background: var(--color-background-surface);
+  border: none;
+  border-radius: var(--color-size-radius-400);
+  cursor: pointer;
+}
+
+.courses__row-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-accent-brand-on-subtle);
+}
+
+.courses__row-name {
+  flex: 1 1 auto;
+  text-align: left;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}
+
+.courses__row-kebab {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.courses__spacer {
+  flex: 1 1 auto;
+}
+
+.courses__create {
+  align-self: center;
+}
+
+.courses__nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--color-size-space-300) var(--color-size-space-400);
+  background: var(--color-background-page);
+  border-top: var(--color-size-stroke-border) solid var(--color-border-default);
+}
+
+.courses__nav-slot {
+  /* Same 44x44 tap-target treatment as the row icons above — icon glyph
+     stays at 24px, this just gives it a full touch area. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--color-size-space-1100);
+  height: var(--color-size-space-1100);
+  color: var(--color-text-secondary);
+}
+
+.courses__nav-slot--accent {
+  color: var(--color-border-focus);
+}
+
+.courses__avatar {
+  width: var(--color-size-space-600);
+  height: var(--color-size-space-600);
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-background-surface);
+}

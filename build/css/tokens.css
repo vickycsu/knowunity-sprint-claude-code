@@ -30,6 +30,8 @@
   --color-color-violet-400-2: #7b65e0;
   --color-color-violet-900-2: #15103a;
   --color-color-violet-300-2: #a78bfa;
+  --color-color-violet-gradient-start: #7080eb;
+  --color-color-violet-gradient-end: #beacfc;
   --color-color-green-300: #4ae5b0;
   --color-color-green-500: #00c386;
   --color-color-green-900: #0a2e22;
@@ -87,6 +89,7 @@
   --color-size-space-700: 28px;
   --color-size-space-800: 32px;
   --color-size-space-1000: 40px;
+  --color-size-space-1100: 44px;
   --color-size-space-1200: 48px;
   --color-size-space-1400: 56px;
   --color-size-space-1600: 64px;
@@ -116,6 +119,8 @@
   --color-size-icon-400: 32px;
   --color-size-illustration-500: 40px;
   --color-size-illustration-800: 64px;
+  --color-size-illustration-1100: 88px;
+  --color-size-illustration-1300: 104px;
   --color-size-illustration-1500: 120px;
   --color-size-illustration-2225: 178px;
   --color-size-illustration-2250: 180px;
@@ -163,6 +168,7 @@
   --color-responsive-mobile-device-width: 375px;
   --color-responsive-mobile-root-font-size: 16px;
   --color-responsive-mobile-scale: 1.25;
+  --color-responsive-mobile-frame-width: 390px;
   --color-responsive-tablet-device: tablet;
   --color-responsive-tablet-device-width: 768px;
   --color-responsive-tablet-root-font-size: 16px;
@@ -219,6 +225,7 @@
   --color-accent-brand-on-bold: #0e0a18;
   --color-accent-brand-subtle: #15103a;
   --color-accent-brand-on-subtle: #7b65e0;
+  --color-accent-brand-ring-gradient: linear-gradient(135deg, #7080eb, #beacfc);
   --color-accent-coral-bold: #fb965b;
   --color-accent-coral-on-bold: #2e0f06;
   --color-accent-coral-subtle: #512e2c;

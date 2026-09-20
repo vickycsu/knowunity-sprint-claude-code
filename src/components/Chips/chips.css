@@ -57,6 +57,21 @@
   color: var(--color-pro-on-bold);
 }
 
+.chip--info.chip--active {
+  background: var(--color-accent-blue-bold);
+  color: var(--color-accent-blue-on-bold);
+}
+
+.chip--success.chip--active {
+  background: var(--color-feedback-success-bold);
+  color: var(--color-feedback-success-on-bold);
+}
+
+.chip--error.chip--active {
+  background: var(--color-feedback-error-bold);
+  color: var(--color-feedback-error-on-bold);
+}
+
 .chip__label {
   white-space: nowrap;
 }
