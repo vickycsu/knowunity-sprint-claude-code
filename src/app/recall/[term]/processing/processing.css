@@ -26,7 +26,12 @@
   align-items: flex-start;
   gap: var(--color-size-space-200);
   width: 100%;
-  padding: var(--color-size-space-300) 0;
+  /* Extra left inset matches the session bar's close button: its 16px icon
+     is centered in a 44px tap target, so its visible glyph sits (44-16)/2
+     further in than the button's own edge. This lines the skeleton up with
+     that glyph, not the tap target's outer edge. */
+  padding: var(--color-size-space-300) 0 var(--color-size-space-300)
+    calc((var(--color-size-space-1100) - var(--color-size-icon-200)) / 2);
 }
 
 .processing__caption {

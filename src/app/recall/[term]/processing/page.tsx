@@ -23,6 +23,7 @@ export default function ProcessingPage() {
   const searchParams = useSearchParams();
   const isSlow = searchParams.get("slow") === "1";
   const attempt = searchParams.get("attempt") ?? "1";
+  const isSayItBack = attempt === "sayback";
 
   const term = Number(params.term);
   const [takingAMoment, setTakingAMoment] = useState(false);
@@ -36,14 +37,23 @@ export default function ProcessingPage() {
       : undefined;
 
     const navigateTimer = setTimeout(() => {
-      router.push(`/recall/${term}/result?attempt=${attempt}`);
+      if (isSayItBack) {
+        // Unaided practice is ungraded and always advances — no Result step.
+        if (term >= SESSION_LENGTH) {
+          router.push("/recall/summary");
+        } else {
+          router.push(`/recall/${term + 1}/prompt`);
+        }
+      } else {
+        router.push(`/recall/${term}/result?attempt=${attempt}`);
+      }
     }, totalDelay);
 
     return () => {
       if (slowTimer) clearTimeout(slowTimer);
       clearTimeout(navigateTimer);
     };
-  }, [isSlow, router, term, attempt]);
+  }, [isSlow, router, term, attempt, isSayItBack]);
 
   return (
     <main className="processing">

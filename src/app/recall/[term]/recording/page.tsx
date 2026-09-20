@@ -42,13 +42,10 @@ export default function RecordingPage() {
 
   function handleSend() {
     if (isSayItBack) {
-      // Unaided practice — always advances regardless of what was said,
-      // per sprint-context.md. No Processing/Result step for this take.
-      if (term >= SESSION_LENGTH) {
-        router.push("/recall/summary");
-      } else {
-        router.push(`/recall/${term + 1}/prompt`);
-      }
+      // Unaided practice — always advances regardless of what was said, so
+      // it still passes through Processing (the "Knowie is reading your
+      // answer" thinking state) but skips Result, since there's no verdict.
+      router.push(`/recall/${term}/processing?attempt=sayback`);
       return;
     }
     router.push(`/recall/${term}/processing?attempt=${attemptNumber}`);
