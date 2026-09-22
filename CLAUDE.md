@@ -15,6 +15,7 @@ When working on UI, use the storybook tools to read the component library before
 - The recall is mocked. No speech-to-text, no audio, no model calls.
 - Sentence case on every label, button and heading. Capitals only for proper nouns (Knowie, PRO).
 - Scope is docs/sprint-context.md. Build what is under Decisions. Nothing under Not building.
+- Every screen ships against the full Must-tier list for its flow, not just what its own Figma frame shows. Where a hard rule (voice-ux.md, sprint-context.md) conflicts with what Figma draws, stop and ask — don't silently match Figma and drop the rule.
 - Replace the starter code in src/app/. Do not extend it as a foundation.
 - Where claude.md or docs/ conflicts with a skill in .claude/skills/, claude.md and docs/ win.
 
@@ -40,3 +41,4 @@ When working on UI, use the storybook tools to read the component library before
 - .claude/skills/ — task-specific design skills. Invoke when relevant.
 - AGENTS.md — generated Next.js guidance. Read before writing Next.js code.
 - component-gaps.md — running list of things built inline during a screen build. Read before building a new screen.
+- scripts/check-contrast.mjs (`npm run check:contrast`) — checks every text/background token pairing in src/ against WCAG 4.5:1. Run it after any tokens.json color change, not a manual re-check.
