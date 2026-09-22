@@ -76,7 +76,11 @@
      elsewhere in this project. */
   border: var(--color-size-stroke-border) solid rgba(145, 120, 230, 0.45);
   border-radius: var(--color-size-radius-400);
-  color: var(--color-text-tertiary);
+  /* text.tertiary (alpha.light-48) measures ~4.5:1 on background.input — right at
+     the WCAG AA line, not a safe margin, on the exact "tertiary on a card" trap
+     sprint-context.md calls out. text.secondary is the same "reduced emphasis"
+     tier one step up and measures ~7.7:1 here. */
+  color: var(--color-text-secondary);
   font: var(--color-typeScale-body-s-regular);
 }
 
@@ -150,6 +154,13 @@
 }
 
 .result__skip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
   margin-top: var(--color-size-space-700);
   padding: 0;
   border: none;
@@ -182,6 +193,13 @@
 }
 
 .result__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
   padding: 0;
   border: none;
   background: none;

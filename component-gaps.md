@@ -37,19 +37,19 @@ rule, since it was needed by four screens simultaneously once found.
   semantic tokens only. `appBar` is listed in design-system.md as "exists in
   the library but isn't used in any current screen" — this screen is the
   first to need it, and it still isn't built, so it's inlined here too.
-- **Path node "done" ring uses an unbound violet gradient fill in Figma**
+- **Path node "done" ring uses a violet gradient fill in Figma**
   (node 15671:10998, stops #7080eb → #beacfc), same class of gap as
-  `RecordingControl`'s Listening bloom — no matching token. First pass wrongly
-  substituted a green `feedback.success` treatment (caught by comparing a
-  screenshot of the actual Figma frame against the built page — wrong hue
-  family entirely, not just an approximation); second pass substituted a flat
-  `border.focus`. Per explicit direction, now uses the real gradient
-  (`linear-gradient(135deg, #7080eb, #beacfc)`) as a **deliberate exception**
-  to the tokens-only rule — raw hex values, not a semantic token, because no
-  token exists to express this gradient at all. The 135deg angle is a clean
-  approximation, not derived from Figma's gradient transform matrix. Flag to
-  the system owner: this gradient should get a real semantic token so it
-  isn't hardcoded in a screen file long-term.
+  `RecordingControl`'s Listening bloom. First pass wrongly substituted a
+  green `feedback.success` treatment (caught by comparing a screenshot of
+  the actual Figma frame against the built page — wrong hue family
+  entirely, not just an approximation); second pass substituted a flat
+  `border.focus`. **Closed:** `accent.brand.ring-gradient` now exists as a
+  real semantic token (`tokens/tokens.json`) and is what `plan.css` actually
+  consumes (`var(--color-accent-brand-ring-gradient)`) — this is no longer a
+  raw-value exception, it was left saying so after the token landed. The
+  135deg angle is still a clean approximation of Figma's gradient transform
+  matrix, not a 1:1 derivation, which is the one part of this gap that's
+  still real.
 - **Ring icons sized at `IconSlot size="250"` (20px) initially looked too
   small for the 64px ring** (Figma's icon-to-ring ratio is closer to 0.35).
   Bumped to `size="300"` (24px) for a closer match.
@@ -297,7 +297,12 @@ Matches Figma's "Screen 04 / Prompt" (node 15666:1058) closely for the base
   inline instead. First pass used `illustration.1500` (120px, nearest
   existing token) but that visibly overshot — corrected to the real 104px
   value directly, same "use the exact value" exception as the topic-ring
-  gradient and the 44px tap targets elsewhere. Its icon is 46px in Figma;
+  gradient and the 44px tap targets elsewhere. **Closed:** `size.illustration.1300`
+  (104px, this row's mic) now exists as a real semantic token and is what
+  `prompt.css`/`result.css` actually consume — this is no longer a
+  raw-value exception, it was left saying so after the token landed. (The
+  hint row's smaller 88px mic below is also tokenized, as
+  `size.illustration.1100`.) Its icon is 46px in Figma;
   `IconSlot`'s largest documented size is `size="400"` (32px) — used at that
   ceiling since no larger documented size exists, rather than inventing one.
   "Type instead" is a 44px bordered ghost circle — closer to
@@ -334,6 +339,17 @@ Matches Figma's "Screen 04 / Prompt" (node 15666:1058) closely for the base
   now built — see Screen 5 below), skipping the permission-primer check
   entirely, since that state isn't built anywhere. Flagged, not silently
   decided as final behavior.
+- **"Type instead" routes to `/recall/[term]/text`, which doesn't exist** —
+  no `text/` route is built anywhere under `src/app/recall/[term]/`, so
+  every tap 404s. This was previously flagged only for the hint screens
+  (which have no "Type instead" control at all, see Screen 7 below) — this
+  is the separate, more serious instance: the control here is visually
+  present, looks functional, and is the brief's one non-negotiable
+  non-voice fallback, so a student commits to it before discovering the
+  dead end. Same defect on Result's own mic row and Result: Empty's "Type
+  instead" link (see Screen 7). Flagged now rather than left silent; not
+  fixed this pass — building a real text-entry screen is out of scope for
+  a cheap fix.
 - Status bar and home indicator omitted, same decision as every other
   screen.
 
@@ -413,6 +429,14 @@ Recording, paused" closely.
 - **`SessionBar` close always triggers the `LeavingSheet`** on this screen
   — per SPEC.md, Recording has no Idle state, so every close tap happens
   mid-take.
+- **Closed:** `.recording__send` (the Paused-state "Send" link) had no
+  enforced touch target — `padding: 0`, no `min-width`/`min-height`, unlike
+  every other tappable text control in this codebase. Not the sole way to
+  submit (tapping the large `RecordingControl` circle while Listening sends
+  directly, per the "Interaction reading" note above), but a real hard-gate
+  failure on the path a student takes if they've already paused. Fixed to
+  the same `min-width/min-height: var(--color-size-space-1100)` (44px)
+  pattern already used on `.result__skip`/`.result__link`.
 - **Cancel & re-record resets the transcript to the term's scripted
   default**, not empty — recall is mocked/deterministic, so a "fresh take"
   reproduces the same scripted transcript rather than simulating a new
@@ -489,6 +513,21 @@ surfaced a real structural discovery, not just a styling gap:
   Matched the frame exactly and flagged the conflict rather than silently
   adding a keyboard button Figma doesn't show, or silently dropping the
   voice-ux.md principle.
+- **The mic-row "Type instead" and Empty's "Type instead" link on this
+  screen both route to `/recall/[term]/text`, which 404s** — same
+  unbuilt-route defect as Screen 4's Prompt "Type instead" (see above), now
+  confirmed on both the Result mic row and Result: Empty. Every "Type
+  instead" control in the loop is currently dead. Flagged, not fixed this
+  pass.
+- **Progress/counter/XP now advance on Reveal, not just Pass** — Reveal is a
+  terminal verdict (its only exit is "Next question"), so it resolves the
+  term the same way Pass does; `sprint-context.md`'s "progress advances only
+  when a term resolves" rule wasn't being applied to it. Fixed in
+  `result/page.tsx` (`isResolved = verdict === "pass" || verdict ===
+  "reveal"`, used for `progress`, `counterText`, and `xpLabel`) — previously
+  only checked `verdict === "pass"`, so a term ending in Reveal (like term
+  2's hint sequence) left the session bar showing the term as still
+  in-progress even after the student moved on.
 - **"Try it in your own words" (Reveal) routes to `/recall/[term]/recording
   ?attempt=sayback`**, a special non-numeric attempt value. That take
   always advances to the next term on Send regardless of what's
@@ -692,3 +731,38 @@ start rather than re-discovering it.
   point terms are grouped by tone — the two-layer guard from the earlier
   SummaryCard 3-term-cap discussion, in place now so the real outcome script
   inherits it rather than needing it added later.
+
+## Shared: cross-component token gaps
+
+Not tied to one screen — found while reconciling the eval panel's System
+fidelity findings against the actual gap ledger.
+
+- **`ButtonIcon`'s bevel shadow is an untokenized raw value**
+  (`button-icon.css`: `box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15)` /
+  `inset 0 -4px 0 rgba(0, 0, 0, 0.15)`, Primary & Secondary only). Already
+  commented in the CSS as "Figma value, not a token," but that comment alone
+  isn't the same disclosure this ledger gives every other raw-value
+  exception (topic-ring gradient, empty-state border alpha, etc.) — logged
+  here now for consistency. Flag to the system owner: no `elevation.*` or
+  `shadow.*` semantic token exists yet for this bevel.
+- **`MascotSlot`'s "thinking" bob keyframe uses a raw pixel motion value**
+  (`mascot-slot.css`: `transform: translateY(-6px)` in
+  `@keyframes mascot-slot-thinking-bob`) — no `motion.*` distance token
+  exists to express it, and unlike the bevel shadow above, this one had no
+  disclosure anywhere before now. Flag to the system owner: no motion-token
+  layer exists in `tokens.json` at all yet, only color/size/type/stroke.
+- **`text.tertiary` (`color.alpha.light-48`) is unsafe on `background.surface`
+  (a card) — computes to ~4.35:1, below the 4.5:1 gate.** No screen
+  currently places that exact pairing (today's usages are all on
+  `background.input`/`background.page`, which clear the gate), so this
+  isn't an active failure, but it's the same "tertiary on a card" trap
+  `sprint-context.md` already warns about, one step removed. **Not fixed
+  this pass:** `tokens.json`'s alpha scale jumps directly from `light-48`
+  (0.4784) to `light-68` (0.6784) with nothing between — closing this gap
+  by raising `text.tertiary`'s alpha would require either reusing
+  `light-68` (making tertiary visually identical to `text.secondary`,
+  defeating the point of having two tiers) or inventing a new alpha step,
+  which `CLAUDE.md`'s hard rule says to stop and ask about rather than do
+  silently. Flag to the system owner: `text.tertiary` should not be placed
+  on `background.surface` until either a token exists to make that safe or
+  a design call is made to collapse the two tiers.

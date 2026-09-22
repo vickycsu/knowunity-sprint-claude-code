@@ -90,6 +90,13 @@
 }
 
 .prompt__skip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
   margin-top: var(--color-size-space-700);
   padding: 0;
   border: none;

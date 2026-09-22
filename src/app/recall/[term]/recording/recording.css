@@ -115,6 +115,14 @@
 }
 
 .recording__send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. Same
+     pattern as .result__skip/.result__link. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
   padding: 0;
   border: none;
   background: none;

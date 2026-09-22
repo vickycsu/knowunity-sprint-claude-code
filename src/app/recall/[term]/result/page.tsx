@@ -65,12 +65,16 @@ export default function ResultPage() {
     router.push(`/recall/${term}/recording?attempt=${attemptNumber + 1}`);
   }
 
+  // Progress advances on any terminal verdict, not just pass — reveal resolves
+  // the term (its only exit is "Next question") exactly like pass does.
+  const isResolved = verdict === "pass" || verdict === "reveal";
+
   return (
     <main className="result">
       <SessionBar
-        progress={progressFor(verdict === "pass" ? nextTerm : term)}
-        counterText={`${Math.min(verdict === "pass" ? nextTerm : term, SESSION_LENGTH)}/${SESSION_LENGTH}`}
-        xpLabel={`${xpEarnedBefore(term) + (verdict === "pass" ? xpForTerm(term) : 0)} XP`}
+        progress={progressFor(isResolved ? nextTerm : term)}
+        counterText={`${Math.min(isResolved ? nextTerm : term, SESSION_LENGTH)}/${SESSION_LENGTH}`}
+        xpLabel={`${xpEarnedBefore(term) + (isResolved ? xpForTerm(term) : 0)} XP`}
         onClose={() => setLeavingSheetOpen(true)}
       />
 

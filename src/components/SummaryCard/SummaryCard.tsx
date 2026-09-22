@@ -20,9 +20,14 @@ const HEADER_LABEL: Record<SummaryCardTone, string> = {
   NeedsPractice: "Needs practice",
 };
 
+// Figma's "Screen 15 / Session summary" (node 15666:1274) uses a checkmark
+// for "Needed a hint" rows, not an X — only "Needs practice" gets the X.
+// Both previously used XCloseIcon here, which meant the two buckets were
+// distinguished only by their card color (a hard-gate contrast/color-alone
+// violation), not by shape as Figma actually specifies.
 const ROW_ICON: Record<SummaryCardTone, ReactNode> = {
   Good: <CheckIcon />,
-  Partial: <XCloseIcon />,
+  Partial: <CheckIcon />,
   NeedsPractice: <XCloseIcon />,
 };
 
