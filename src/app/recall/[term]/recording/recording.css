@@ -108,6 +108,14 @@
   cursor: pointer;
 }
 
+/* Nothing to clear yet. Dimmed rather than hidden, so the control doesn't
+   appear and disappear under the student's thumb as they talk. */
+.recording__side-button:disabled {
+  border-color: var(--color-interactive-disabled);
+  color: var(--color-interactive-disabled);
+  cursor: default;
+}
+
 .recording__side-spacer {
   flex-shrink: 0;
   width: var(--color-size-space-1200);
@@ -131,3 +139,55 @@
   cursor: pointer;
 }
 
+
+/* Placeholder state: nothing transcribed yet. Distinct from a real
+   transcript so an empty box never reads as "it heard me say nothing". */
+.recording__transcript-text--waiting {
+  color: var(--color-text-secondary);
+}
+
+/* Mic-not-capturing warning. Shown only when the input level stayed below
+   the audible floor for the whole grace window and nothing was transcribed
+   — a real hardware/permission problem, not a student still thinking.
+   Paired with an icon, not color alone, per the platform constraints. */
+.recording__mic-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--color-size-space-150);
+  width: 100%;
+  padding: var(--color-size-space-200) var(--color-size-space-400);
+  background: var(--color-feedback-error-subtle);
+  border: var(--color-size-stroke-border) solid var(--color-feedback-error-bold);
+  border-radius: var(--color-size-radius-400);
+  color: var(--color-feedback-error-on-subtle);
+  font: var(--color-typeScale-caption-m-regular);
+}
+
+/* The listening bloom breathes with the real input level, so "we can hear
+   you" is visible before the transcript catches up. Screen-local override,
+   same pattern as the record-row gap above — the shared RecordingControl
+   keeps its static Figma appearance for every other consumer. */
+.recording__record-row .recording-control--listening .recording-control__bloom {
+  transform: translate(-50%, -50%)
+    scale(calc(1 + var(--recording-level, 0) * 0.08));
+  transition: transform 90ms linear;
+}
+
+/* The keyboard escape, reachable at any point in a take — not only before
+   the student starts talking. Styled as a quiet link rather than a button so
+   it never competes with the record control above it. */
+.recording__type-instead {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-link-hover);
+  font: var(--color-typeScale-body-s-regular);
+  cursor: pointer;
+}

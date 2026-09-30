@@ -48,6 +48,15 @@
   min-height: var(--color-size-space-1600);
 }
 
+/* A bucket's card plus the panel for whichever of its rows is expanded, so
+   the detail stays attached to the row it belongs to no matter which bucket
+   the term landed in this session. Matches .summary__body's own gap. */
+.summary__bucket {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+}
+
 .summary__detail {
   display: flex;
   flex-direction: column;

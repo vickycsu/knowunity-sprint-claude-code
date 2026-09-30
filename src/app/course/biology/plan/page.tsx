@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
 import { MicIcon } from "@/components/icons/MicIcon";
+import { resetSession, useSummary } from "@/app/recall/_lib/session";
 import "./plan.css";
 
 interface SettingsRow {
@@ -105,12 +106,6 @@ const TOPIC_NODES_AFTER_SESSION: TopicNode[] = [
   { state: "todo", title: "Membrane Transport" },
 ];
 
-// Same status as every other scripted concept name in this prototype —
-// draft, matching Figma's own example rather than this build's actual
-// per-term outcome data (which doesn't assign human-readable concept names
-// per term yet). Flagged in component-gaps.md.
-const REVIEW_AGAIN_CONCEPTS = ["Nucleus", "Osmosis"];
-
 function TopicRing({ state, icon }: { state: TopicNodeState; icon?: ReactNode }) {
   const defaultIcon = state === "done" ? StarIcon : state === "current" ? <MicIcon /> : QuizIcon;
   return (
@@ -132,16 +127,26 @@ function StudyPlanContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  // This is how the real flow reaches Screen 18 today: Summary's close and
+  // This is how the real flow reaches Screen 18: Summary's close and
   // Continue both navigate here with ?afterSession=1 once all 4 terms
-  // resolve. It's a query param rather than real persisted session state
-  // (no shared state/storage connects the recall loop's actual per-term
-  // outcomes back to this screen — that's a bigger piece of work), so the
-  // Review Again block always shows the same two example concepts
-  // regardless of what actually happened in the session just finished.
-  // Also reachable directly as a manual preview, same as Processing's
-  // ?slow=1.
+  // resolve. The flag only decides whether the block is shown — what it
+  // lists comes from the session the student just finished. Also reachable
+  // directly as a manual preview, same as Processing's ?slow=1, in which
+  // case there is no session to report and the block stays hidden.
   const afterSession = searchParams.get("afterSession") === "1";
+
+  // Everything the student didn't explain cleanly, per sprint-context.md:
+  // "Needed a hint" and "Needs practice" both go into Review Again.
+  const outcomes = useSummary();
+  const reviewAgain = outcomes.filter((outcome) => outcome.bucket !== "Good");
+
+  // Answers, verdicts and XP are now real per-run state, so entering the
+  // recall card starts a clean session rather than inheriting whatever the
+  // last run left in sessionStorage.
+  function startRecall() {
+    resetSession();
+    router.push("/recall/1/prompt");
+  }
   const topicNodes = afterSession ? TOPIC_NODES_AFTER_SESSION : TOPIC_NODES;
 
   return (
@@ -202,7 +207,7 @@ function StudyPlanContent() {
                 <button
                   type="button"
                   className="study-plan__node"
-                  onClick={() => router.push("/recall/1/prompt")}
+                  onClick={startRecall}
                 >
                   <TopicRing state={node.state} icon={node.icon} />
                   <span className="study-plan__node-label">
@@ -225,13 +230,15 @@ function StudyPlanContent() {
         </ol>
       </div>
 
-      {afterSession ? (
+      {afterSession && reviewAgain.length > 0 ? (
         <div className="study-plan__review-again">
           <div className="study-plan__review-again-card">
-            <p className="study-plan__review-again-label">Review again</p>
-            {REVIEW_AGAIN_CONCEPTS.map((concept) => (
-              <div key={concept} className="study-plan__review-again-concept">
-                {concept}
+            <p className="study-plan__review-again-label">
+              Review again ({reviewAgain.length})
+            </p>
+            {reviewAgain.map((outcome) => (
+              <div key={outcome.term} className="study-plan__review-again-concept">
+                {outcome.name}
               </div>
             ))}
             {/* "New session scoped to the flagged concepts" (SPEC.md's
@@ -241,7 +248,7 @@ function StudyPlanContent() {
             <button
               type="button"
               className="study-plan__review-again-start"
-              onClick={() => router.push("/recall/1/prompt")}
+              onClick={startRecall}
             >
               Start review
             </button>
