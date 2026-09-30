@@ -1,0 +1,142 @@
+.text-turn {
+  display: flex;
+  flex-direction: column;
+  /* dvh, not vh: the browser chrome collapses on scroll and vh would leave a
+     dead strip at the bottom. The software keyboard is handled separately by
+     --keyboard-inset, since neither unit shrinks for it on iOS. */
+  min-height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  max-width: var(--color-responsive-mobile-frame-width);
+  margin: 0 auto;
+  background: var(--color-background-page);
+}
+
+/* The question. Scrolls if it has to; the compose block below never does. */
+.text-turn__prompt {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--color-size-space-200) var(--color-size-space-600);
+}
+
+.text-turn__mascot {
+  flex-shrink: 0;
+  /* Collapsed rather than unmounted, so Knowie slides out of the way instead
+     of the question jumping up the screen when the keyboard opens. */
+  overflow: hidden;
+  transition:
+    height 160ms ease,
+    opacity 120ms ease;
+  height: var(--color-size-space-2400);
+  opacity: 1;
+}
+
+.text-turn--composing .text-turn__mascot {
+  height: 0;
+  opacity: 0;
+}
+
+.text-turn__bubble {
+  width: 100%;
+  padding: var(--color-size-space-500);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-600);
+}
+
+.text-turn__question {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-regular);
+}
+
+/* The compose block sits directly above the keyboard. --keyboard-inset is
+   measured from visualViewport, so this clears the real keyboard rather than
+   a guessed height. */
+.text-turn__compose {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  padding: var(--color-size-space-400) var(--color-size-space-600)
+    var(--color-size-space-500);
+  padding-bottom: calc(var(--color-size-space-500) + var(--keyboard-inset));
+  background: var(--color-background-page);
+  /* Separates the compose block from the question above it once the two are
+     pushed together by the keyboard. */
+  border-top: var(--color-size-stroke-border) solid var(--color-border-default);
+}
+
+.text-turn__carried-note {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-caption-m-regular);
+}
+
+.text-turn__input {
+  width: 100%;
+  /* Two lines to start, growing with the answer up to five-ish, then it
+     scrolls — an explanation shouldn't be typed through a one-line slot, but
+     it can't be allowed to push the send button off the screen either. */
+  min-height: var(--color-size-space-1400);
+  max-height: var(--color-size-space-4000);
+  padding: var(--color-size-space-400);
+  box-sizing: border-box;
+  background: var(--color-background-input);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
+  border-radius: var(--color-size-radius-400);
+  resize: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-m-regular);
+}
+
+.text-turn__input::placeholder {
+  /* text.tertiary measures right at the 4.5:1 line on background.input — the
+     "tertiary on a card" trap sprint-context.md calls out. text.secondary is
+     the same reduced-emphasis tier one step up, with real headroom. */
+  color: var(--color-text-secondary);
+}
+
+.text-turn__input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+.text-turn .btn {
+  width: 100%;
+}
+
+.text-turn__links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-turn__link,
+.text-turn__skip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label text
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.text-turn__link {
+  color: var(--color-text-link-hover);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+.text-turn__skip {
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+}

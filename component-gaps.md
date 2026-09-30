@@ -766,3 +766,332 @@ fidelity findings against the actual gap ledger.
   silently. Flag to the system owner: `text.tertiary` should not be placed
   on `background.surface` until either a token exists to make that safe or
   a design call is made to collapse the two tiers.
+
+## Voice recall going live (2026-09-23)
+
+- **The text fallback turn (`/recall/[term]/text`) had no screen.** Prompt,
+  Result and the permission sheet all linked to it and every one of those
+  links 404'd. Built this pass, because it stopped being theoretical the
+  moment permission became real: a denied microphone, a browser without
+  speech recognition and a dead mic all route here, and without it each one
+  is a dead end — the exact failure `voice-ux.md` calls "the dead-end you
+  can't afford". It got its own design pass the same day — see "The typing
+  turn" below.
+- **`MicPermissionSheet` is a new component**, not a documented one. It
+  follows `LeavingSheet`'s structure exactly (scrim, handle, mascot, title,
+  primary button, text link) and carries three stages: primer, denied, and
+  "this browser can't listen". Promoted to a component rather than inlined
+  because both Prompt and Recording show it.
+- **The "we can't hear you" warning row is inline** in `recording.css`.
+  `Snackbar` was the closest documented component, but it is a floating,
+  transient, chip-bearing element; this is a persistent inline row tied to
+  the transcript box, with no chip. Built inline from
+  `feedback.error.subtle`/`.bold`/`.on-subtle`, the same tokens
+  `.result__verdict--error` already uses. **Flag to the system owner:** an
+  inline-alert component would cover this properly.
+- **`RecordingControl`'s bloom is scaled by live input level** via a
+  screen-local override in `recording.css` (`--recording-level`). The shared
+  component keeps its static Figma appearance for every other consumer. Same
+  "screen-local, don't touch the shared component" pattern as the
+  record-row gap above. **Flag to the system owner:** if a level-reactive
+  listening state is wanted generally, it belongs in the component with a
+  real motion token, not in a screen.
+- **The Summary screen and the plan's Review Again block now report the
+  real session** (done in a follow-up pass the same day; they were the last
+  two screens still showing fixed example data). Notes on what that
+  required are below.
+
+## Summary wired to real outcomes (2026-09-23)
+
+- **`SummaryCard` gained a fourth row** (`term4` / `showRow4`). Figma's frame
+  draws three, which was enough while the screen showed a fixed example, but
+  a real four-term session can put every term in one bucket — a student who
+  explains all four well puts four rows in "Good explanations", which is the
+  happy path, not an edge case. The existing three props are untouched, so
+  every current caller and story is unaffected. **Flag to the design owner:
+  the Figma component needs a fourth row slot, or a decision that a bucket
+  caps at three and overflows somehow.**
+- **Each term now carries a concept `name`** in `terms.ts`: Plasma Membrane,
+  Membrane Permeability, Osmosis, Membrane Transport. The previous hardcoded
+  list ("Cell Structure and Function", "Plasma Membrane", "Osmosis",
+  "Membrane Transport") did not correspond to the four terms actually asked —
+  term 1 and 2 both ask about the cell membrane, so they are named for the
+  part of it each one tests. **Deliberate rule deviation:** these are Title
+  Case, not the sentence case `CLAUDE.md` mandates, because every other
+  concept name in this prototype is Title Case (the plan's topic list, the
+  Review Again block) and mixing the two inside one flow reads as a bug.
+  `CLAUDE.md`'s rule is written about labels, buttons and headings. **Flag to
+  the design owner if concept names should be sentence case too** — it is a
+  one-line change in `terms.ts`, but it would need the plan screen's topic
+  titles changed with it.
+- **Bucketing mirrors the XP rule exactly**, so the two can never disagree: a
+  first-attempt pass is a good explanation (25 XP), a pass after a hint
+  "Needed a hint" (10 XP), and a reveal, a skip or an unresolved term
+  "Needs practice" (0 XP).
+- **Empty buckets are hidden rather than rendered empty.** A student who gets
+  everything right has nothing in "Needs practice", and an empty card reads
+  as a bucket that failed to load. Same for the Review Again block, which
+  disappears when there is nothing to review.
+- **The expanded row's panel now shows every term, not just one.** It leads
+  with the student's own answer ("What you said" / "What you typed", or "You
+  skipped this one"), because the transcript is otherwise gone once a term
+  resolves and seeing it is what makes a misheard answer read as "it
+  misheard me" rather than "I failed". "The answer" and "Explain more" only
+  appear when the student didn't get there on their own — a term they
+  explained correctly doesn't need correcting. **Flag to the design owner:
+  Figma only draws this panel for the "Needed a hint" tone; showing a
+  read-back for correct answers too is a deliberate addition.**
+- **"Explain more" is per-term.** `terms.ts` carries two definitions per
+  concept; previously only Osmosis had any, and the sheet was hardcoded to
+  it regardless of which row was tapped.
+- **Still inert:** "Practice again" in the detail panel, "Ask Knowie" in the
+  sheet, and "Start review" still restarting the same fixed 4-term session
+  rather than one scoped to the flagged concepts. Unchanged from before —
+  none of the three has a decided destination in `sprint-context.md` or
+  `SPEC.md`.
+
+## The typing turn, designed out (2026-09-23)
+
+No Figma frame exists for this screen; `design-brief.md` only says "if the
+student can't speak right now, a way to type instead". What is built:
+
+- **It is a compose screen, not a form.** The first version put the question,
+  a fixed-height box and a send button in a column with a flexible spacer,
+  which on a phone puts send underneath the software keyboard. Now the
+  question scrolls in the upper half and the compose block is pinned above
+  the keyboard.
+- **The keyboard's real height is measured**, via `visualViewport`, and
+  applied as `--keyboard-inset`. `100dvh` does not shrink for the keyboard on
+  iOS, so a layout that trusts it hides its own primary action. Read through
+  `useSyncExternalStore` rather than an effect, so nothing writes layout
+  state on mount.
+- **The box grows with the answer** from two lines to roughly five, then
+  scrolls. Sized in JS against the `max-height` its stylesheet sets, so the
+  cap stays a token rather than a number in a component.
+- **Knowie collapses** once the keyboard is up or an answer is on screen.
+  Deliberately not tied to focus: `autoFocus` fires before React attaches the
+  handler, so a focus-driven version silently fails on first load — it did,
+  and the question was clipped in half at keyboard height.
+- **Enter is a newline; Cmd/Ctrl+Enter sends.** An explanation runs to
+  several sentences.
+- **The answer carries across a modality switch, both ways.** Stored as the
+  same session draft the judge reads, so nothing new was needed to hold it.
+  **Flag to the design owner:** the carried-over note ("Your answer so far —
+  edit it however you like") is new copy with no frame behind it.
+- **Deliberate deviation from Figma: the hint screens now show a keyboard
+  button** next to the mic. Figma's hint frames draw the mic alone. This was
+  already logged above as conflicting with `voice-ux.md`'s "always offer a
+  non-voice path"; a retry after a hint is exactly where a student who
+  can't speak gets stuck, so the rule won. **Flag to the design owner.**
+- **Recording gained a "Type instead" link.** There was no non-voice escape
+  once a take had started — the keyboard was reachable before speaking and
+  after failing, but not during. It doubles as the way out of a microphone
+  that never opens.
+- **New `unavailable` stage on `MicPermissionSheet`.** `getUserMedia`
+  neither resolves nor rejects while the browser's permission dialog sits
+  unanswered, so the screen waited on "connecting" forever. After eight
+  seconds it now says so and offers the keyboard. **Flag to the design
+  owner: new state, new copy, no frame.**
+- **Still per-turn, not a preference.** Choosing to type once does not make
+  the next question a typing question — `sprint-context.md` rules out a
+  parallel text-first experience. **Flag to the design owner if a student
+  who types twice in a row should stop being asked to speak.**
+
+## Revealed-answer action made consistent (2026-09-24)
+
+- **"Try it in your own words" was a filled primary button; it is now a
+  caption above a mic**, with "Next question" as a bold text link below.
+  Every other "answer this" moment in the loop — Prompt, the pass row, both
+  hint rows — is a caption above a mic, so a filled button here read as a
+  different kind of action when it is the same one. This also matches the
+  live app's own revealed-answer screen
+  (`docs/reference/voice-revealed-answer.PNG`), which pairs "Try it yourself
+  after reading" with a full-size mic and "Next question" underneath.
+- Uses the full-size mic (`result__mic`, 104px), not the smaller hint mic
+  (88px) — matching the live reference and the pass row, since this is a
+  fresh attempt rather than a retry inside a hint ladder.
+- **The keyboard sits beside it**, same as every other mic row, which meant
+  the typing turn had to learn unaided practice: `?attempt=sayback` there now
+  replays the term's original question and stays ungraded, writing to the
+  same attempt slot the voice version uses so the two can't diverge.
+
+## The bin clears instead of re-recording (2026-09-24)
+
+- **The trash control used to discard the take and immediately reopen the
+  microphone.** It now empties the transcript and leaves the screen paused,
+  so the take restarts only when the student taps "Tap to resume". Reopening
+  the mic on a tap of a bin starts a recording nobody asked for, which is
+  what `voice-ux.md` principle 2 ("keep the student in control of start and
+  stop") exists to prevent. `sprint-context.md`'s "cancel + re-record"
+  wording is updated to match.
+- **It is disabled when there is nothing to clear**, dimmed rather than
+  hidden so the control doesn't appear and disappear under the student's
+  thumb mid-take. Uses `interactive.disabled`; no new token.
+- `aria-label` changed from "Cancel and re-record" to "Clear answer".
+
+## Microphone failures name their own cause (2026-09-24)
+
+- **Every way the microphone can fail used to say "blocked for this site."**
+  That sends the student into a browser setting that is usually already
+  correct, and it hid the real cause. `getUserMedia`'s `DOMException.name` is
+  now mapped onto six distinct states, each with its own message and its own
+  next step: `blocked`, `no-device`, `in-use`, `insecure`, `unsupported`,
+  `timeout`.
+- **`insecure` is the one worth knowing about when demoing.** It fires when
+  `navigator.mediaDevices` is missing entirely — a page served over plain
+  http from something other than localhost, or an embedded webview such as a
+  preview pane inside an editor or an in-app browser. Those webviews do not
+  hand microphone access through at all, so the voice path cannot work there
+  however the permissions are set.
+- `CaptureStatus` collapsed from six members to four (`idle`, `listening`,
+  `paused`, `failed`); the reason now travels separately as
+  `VoiceCapture.failure`, so a state and its cause stop being the same field.
+- **Flag to the design owner: five of these six messages are new copy with
+  no frame behind them.**
+
+## A live mic that transcribes nothing (2026-09-24)
+
+- **Chrome's recognizer needs to reach a speech service.** With no route to
+  it, `start()` resolves straight into an `onend` — no `onstart`, no
+  `onerror` — and the restart loop in `speech.ts` spun forever. The level
+  meter showed the microphone working the whole time and not one word ever
+  appeared, with nothing on screen to explain it. Three consecutive sessions
+  that end without ever opening now stop the loop and surface a seventh
+  failure state, `no-recognition`. This is the most likely thing a student
+  means by "the microphone isn't working": the mic is fine, the transcription
+  isn't.
+- **`/mic-check` is a diagnostic route, not product UI.** It runs every check
+  the recall loop depends on — secure context, `mediaDevices`, which
+  `SpeechRecognition` constructor exists, permission state, a timed
+  `getUserMedia` with the real `DOMException.name`, the device list, track
+  state, `AudioContext` state, five seconds of real peak level against the
+  same 0.012 silence threshold the recall screen uses, and a live log of
+  recognition events. Everything gated behind its button, because Safari
+  refuses both `getUserMedia` and `SpeechRecognition` outside a user gesture
+  — itself one of the things worth catching. **Delete it, or move it behind a
+  dev-only guard, before this goes anywhere real.**
+
+## Two recognizers on one microphone (2026-09-24)
+
+The bug behind "my mic is on and connected but it's still not working".
+
+- **React runs mount effects twice in development** — start, cleanup, start.
+  The Recording screen's `capture.start()` therefore ran twice, and the first
+  `getUserMedia` was still in flight when the second began. The first promise
+  then resolved *after* the teardown meant to cancel it, set itself listening
+  again and built a second recognizer that `recognitionRef` no longer pointed
+  at. Two recognizers on one microphone: every phrase transcribed twice, and
+  the orphan unstoppable, because nothing held a reference to it and its
+  `onend` kept restarting it. Confirmed by instrumenting the constructor —
+  two instances, and the transcript box showed the same sentence twice.
+- **Fixed with a generation token.** Each `start()` takes the next token;
+  anything resolving against a stale one releases the stream it opened and
+  returns. `stop()` bumps the token so an in-flight start can't revive a take
+  after teardown. `startRecognition()` also refuses to build a second
+  recognizer while one exists.
+- **Why it read as a broken microphone.** The level meter runs off a separate
+  `getUserMedia` stream, so the glow responded to the student's voice
+  perfectly while the two recognizers aborted each other. Everything looked
+  live except the words.
+- **Recognition error names were conflated too.** `service-not-allowed` and
+  `network` are about the speech service, not the microphone, and were being
+  reported as a blocked mic — sending the student to a browser permission
+  that was already correct. They now map to `no-recognition`;
+  `audio-capture` maps to `no-device`; only `not-allowed` means blocked.
+
+## Every silent recognizer failure now speaks up (2026-09-25)
+
+The duplicate-recognizer fix was real but wasn't the whole story — the screen
+could still sit claiming to listen while nothing transcribed.
+
+- **`recognition.start()` throwing was swallowed.** The catch block was there
+  for "a previous instance is still closing", but it also caught Safari
+  refusing to start speech recognition outside a user gesture. The screen
+  then showed a live level meter, a glowing control and an empty transcript,
+  with no error anywhere. The catch now clears `recognitionRef` so the state
+  is at least honest.
+- **A watchdog covers the rest.** Seven seconds after a take opens, if the
+  recognizer has never fired `onstart`, the screen stops claiming to listen
+  and shows "Knowie can't make out words" with the keyboard beside it. This
+  catches start() throwing, a session that ends instantly, and a browser that
+  accepts start() and then does nothing — without needing to know which.
+  Verified it does *not* fire on ten seconds of a student thinking in
+  silence with a working recognizer.
+- **`retry()` runs inside the tap.** A user gesture does not survive an
+  `await`, so the old retry — permission round-trip, then `capture.start()`,
+  then `startRecognition()` inside another promise — could never satisfy
+  Safari. When the microphone is already open and only the recognizer
+  failed, the retry now restarts it synchronously from the click handler.
+  Verified: with the gesture available, "Try again" recovers the take.
+- **Flag to the design owner:** this makes "Knowie can't make out words" the
+  catch-all for any transcription failure, so it will be the most-seen of the
+  seven failure messages. Worth its own copy review.
+
+## Live transcription removed; answers prepopulated again (2026-09-25)
+
+Reverted at the owner's request after the microphone could not be made to
+work reliably on their machine. A prototype that can't be demonstrated is
+worse than one with fixed answers.
+
+- **Deleted:** `_lib/speech.ts` (Web Speech API capture, permission requests,
+  level metering, the seven failure states and their watchdogs),
+  `_lib/judge.ts` (the keyword rubric), and the `/mic-check` diagnostic route.
+  Nothing in the prototype touches a microphone API now.
+- **Restored:** per-term, per-attempt scripted answers and verdicts in
+  `terms.ts`, recovered from git. Term 1 (empty → pass) and term 2 (hint →
+  hint → reveal) are Figma's authored copy again.
+- **Kept from the live build**, because none of it depended on the
+  microphone: the typing turn, the Summary reporting the real run, Review
+  again, the revealed-answer mic-and-caption, and the bin clearing the take
+  in place.
+- **The take is revealed a word at a time** rather than appearing whole. The
+  answer is prepopulated either way; the reveal is what makes it read as
+  listening instead of as text that was always on screen.
+- **The permission primer is a visual mock again**, as `sprint-context.md`
+  originally specified. It appears on term 1 only — re-priming a permission
+  that was never really requested, on every term, is friction the real flow
+  wouldn't have.
+- **Typed answers get their own words back but the scripted outcome.** Both
+  paths stay predictable for a walkthrough. A typed answer skips past a
+  scripted "nothing was captured" beat, since that state is about a
+  microphone and a typed answer plainly isn't empty. **Flag to the design
+  owner: this means typing into term 3 and typing nonsense both return
+  "That's it exactly."** Fine for a walkthrough, wrong for a usability test —
+  say the word and the typed path can be judged for real, which never
+  depended on the mic.
+- **An empty take no longer demotes the term.** Only a hint moves a pass from
+  "Good explanations" to "Needed a hint" — a recording that captured nothing
+  is a recording that went wrong, not a gap in what the student knew. Without
+  this, term 1's scripted empty-then-pass showcase landed in the wrong
+  bucket and paid 10 XP instead of 25.
+
+## The keyboard now opens when the student asks to type (2026-09-30)
+
+- **Tapping the keyboard icon opened the typing screen without a keyboard.**
+  iOS and Android only raise the keyboard when an input is focused during a
+  user gesture, and the tap navigates first, so by the time the textarea
+  mounted the gesture was gone and `autoFocus` raised nothing. The student
+  landed on a screen built for typing and had to tap the box a second time
+  before they could type.
+- **`_lib/keyboard.ts` hands the keyboard across the navigation.** The tap
+  synchronously focuses a throwaway input that lives outside React, so it
+  survives the route change holding the keyboard open; the typing screen's
+  ref callback then moves focus to the real textarea and removes the
+  stand-in. Focus moving between two text inputs keeps the keyboard up,
+  where focus dropping to nothing closes it. A four-second timer releases the
+  stand-in if the navigation never lands.
+- **Claimed at all seven entry points:** the Prompt keyboard icon, the
+  primer's "Type instead", the mid-take "Type instead" on Recording, and the
+  four routes from Result (empty, reveal, hint retry, and the next term's
+  row).
+- **`autoFocus` is gone.** It fires before React attaches handlers and does
+  not raise a mobile keyboard, so the ref callback does the focusing instead.
+  Direct navigation to `/recall/[term]/text` still focuses the box; without a
+  gesture behind it the keyboard stays down, which is the platform's rule and
+  not something to work around.
+- **Decision, 2026-09-30:** the owner chose the real device keyboard over
+  drawing a mock one inside the frame. On a desktop browser the typing screen
+  therefore shows a focused box and no keyboard, and the space the compose
+  block reserves through `--keyboard-inset` stays at zero. **Flag if the
+  prototype needs to be demoed on a laptop** — a drawn keyboard is the only
+  way that screen looks right there.

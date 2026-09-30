@@ -15,18 +15,41 @@ export interface Attempt {
 }
 
 export interface TermScript {
+  /**
+   * The concept this term tests, as the Summary and the study plan name it.
+   * Title Case, matching every other concept name in this prototype.
+   */
+  name: string;
   question: string;
   attempts: Attempt[];
+  /** Shown as "The answer" in the Summary when this concept is flagged. */
+  answer: string;
+  /** Shown in the Summary's "Explain more" sheet. */
+  explainMore: { term: string; copy: string }[];
 }
 
-// Per-term scripted content. Term 1 (empty -> pass), term 2 (hint1 -> hint2
-// -> reveal), and term 1's original question all match Figma's actual
-// authored copy ("Screen 04/07/11" for term 1, "Screen 08/09/10" for term
-// 2's hint flow). Terms 3-4 are still single-pass placeholders pending
-// their own screens, same draft status as before.
+// Per-term scripted content. The spoken answers are prepopulated: tapping the
+// mic replays the scripted take for that term and attempt rather than
+// transcribing live. Term 1 (empty -> pass), term 2 (hint1 -> hint2 ->
+// reveal), and term 1's original question all match Figma's actual authored
+// copy ("Screen 04/07/11" for term 1, "Screen 08/09/10" for term 2's hint
+// flow). Terms 3-4 are single-pass placeholders pending their own screens.
 export const TERMS: Record<number, TermScript> = {
   1: {
+    name: "Plasma Membrane",
     question: "In your own words, what does the cell membrane do?",
+    answer:
+      "the membrane surrounds the cell and controls what enters and leaves it, because it's selectively permeable.",
+    explainMore: [
+      {
+        term: "Plasma membrane",
+        copy: "The layer around a cell that holds it together and controls what enters and leaves.",
+      },
+      {
+        term: "Selectively permeable",
+        copy: "Letting some things through and holding others back, rather than everything or nothing.",
+      },
+    ],
     attempts: [
       {
         verdict: "empty",
@@ -41,7 +64,20 @@ export const TERMS: Record<number, TermScript> = {
     ],
   },
   2: {
+    name: "Membrane Permeability",
     question: "In your own words, what does the cell membrane do?",
+    answer:
+      "the membrane is selectively permeable. Small molecules pass, larger ones need a protein channel.",
+    explainMore: [
+      {
+        term: "Selectively permeable",
+        copy: "Letting some things through and holding others back, rather than everything or nothing.",
+      },
+      {
+        term: "Protein channel",
+        copy: "A passage through the membrane for molecules too large to slip across on their own.",
+      },
+    ],
     attempts: [
       {
         verdict: "hint1",
@@ -66,7 +102,20 @@ export const TERMS: Record<number, TermScript> = {
     ],
   },
   3: {
+    name: "Osmosis",
     question: "In your own words, what is osmosis?",
+    answer:
+      "osmosis is water moving across a membrane from where there's more water to where there's less.",
+    explainMore: [
+      {
+        term: "Osmosis",
+        copy: "Water moving across a membrane, from where there is more water to where there is less.",
+      },
+      {
+        term: "Semi-permeable membrane",
+        copy: "A barrier that lets some things through and holds others back.",
+      },
+    ],
     attempts: [
       {
         verdict: "pass",
@@ -76,7 +125,20 @@ export const TERMS: Record<number, TermScript> = {
     ],
   },
   4: {
+    name: "Membrane Transport",
     question: "In your own words, how do substances move across the cell membrane?",
+    answer:
+      "small molecules diffuse straight through, larger ones use protein channels, and moving something against its gradient costs energy.",
+    explainMore: [
+      {
+        term: "Diffusion",
+        copy: "Molecules spreading from where they are crowded to where they are not, with no energy spent.",
+      },
+      {
+        term: "Active transport",
+        copy: "Moving a substance against its gradient, which the cell has to spend energy to do.",
+      },
+    ],
     attempts: [
       {
         verdict: "pass",
@@ -87,47 +149,17 @@ export const TERMS: Record<number, TermScript> = {
   },
 };
 
-// XP earned once a term fully resolves, per sprint-context.md: 25 pass, 10
-// hinted, 0 revealed/skipped/empty. "Empty" only ever appears as a
-// mid-term attempt (never a term's *last* attempt in any script built so
-// far — it always leads to a retry), so this value isn't exercised yet
-// either, but it's here for when a term ends on an unrecovered empty take.
-const XP_BY_VERDICT: Record<Verdict, number> = {
-  pass: 25,
-  hint1: 0,
-  hint2: 0,
-  reveal: 0,
-  empty: 0,
-};
-
-function finalVerdict(term: number): Verdict {
-  const script = TERMS[term];
-  const last = script?.attempts[script.attempts.length - 1];
-  return last?.verdict ?? "pass";
-}
-
-/** Total XP from every term strictly before `term` (i.e. already resolved). */
-export function xpEarnedBefore(term: number): number {
-  let total = 0;
-  for (let t = 1; t < term; t += 1) {
-    total += XP_BY_VERDICT[finalVerdict(t)];
-  }
-  return total;
-}
-
-/** XP `term` itself contributes once its last scripted attempt resolves. */
-export function xpForTerm(term: number): number {
-  return XP_BY_VERDICT[finalVerdict(term)];
+/** The scripted take for a term and attempt, clamped to what the script has. */
+export function attemptFor(term: number, attemptNumber: number): Attempt {
+  const script = TERMS[term] ?? TERMS[1];
+  return script.attempts[attemptNumber - 1] ?? script.attempts[script.attempts.length - 1];
 }
 
 /**
- * The question shown in Recording's (and, for a first attempt, Prompt's)
- * bubble. Attempt 1 gets the term's original question; each retry after a
- * hint gets the *previous* attempt's full response, since that response
- * already embeds the narrower follow-up question (matching Figma's Result
- * screens, which merge the hint response and the next question into one
- * bubble rather than showing a separate "question" field per hint). A
- * retry after "empty" re-shows the same original question instead, since
+ * The question shown on Recording (and, for a first attempt, Prompt).
+ * Attempt 1 gets the term's original question; each retry after a hint gets
+ * the previous attempt's response, which already embeds the narrower
+ * follow-up question. A retry after "empty" re-shows the original, since
  * there was no response to embed a follow-up in.
  */
 export function questionForAttempt(term: number, attemptNumber: number): string {

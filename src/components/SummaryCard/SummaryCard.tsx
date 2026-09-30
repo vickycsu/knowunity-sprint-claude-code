@@ -6,7 +6,13 @@ import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import "./summary-card.css";
 
 export type SummaryCardTone = "Good" | "Partial" | "NeedsPractice";
-export type SummaryCardTermIndex = 1 | 2 | 3;
+/**
+ * Figma's frame draws three rows, which was enough while the summary showed
+ * a fixed example. With real session data a single bucket can hold all four
+ * terms — a student who aces every one puts four rows in "Good
+ * explanations" — so a fourth row exists. Flagged in component-gaps.md.
+ */
+export type SummaryCardTermIndex = 1 | 2 | 3 | 4;
 
 const TONE_CLASS: Record<SummaryCardTone, string> = {
   Good: "good",
@@ -37,8 +43,10 @@ export interface SummaryCardProps {
   term1: string;
   term2?: string;
   term3?: string;
+  term4?: string;
   showRow2?: boolean;
   showRow3?: boolean;
+  showRow4?: boolean;
   /** The term currently expanded, if any. Each row shows a chevron so the student knows it can be tapped open. */
   expandedTerm?: SummaryCardTermIndex;
   /** Called with the tapped row's term index. */
@@ -50,8 +58,10 @@ export function SummaryCard({
   term1,
   term2,
   term3,
+  term4,
   showRow2 = false,
   showRow3 = false,
+  showRow4 = false,
   expandedTerm,
   onToggleTerm,
 }: SummaryCardProps) {
@@ -82,6 +92,7 @@ export function SummaryCard({
         {row(1, term1)}
         {showRow2 && term2 ? row(2, term2) : null}
         {showRow3 && term3 ? row(3, term3) : null}
+        {showRow4 && term4 ? row(4, term4) : null}
       </div>
     </div>
   );

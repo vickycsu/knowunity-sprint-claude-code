@@ -12,7 +12,7 @@ When working on UI, use the storybook tools to read the component library before
 - Mobile only, 390px wide, dark mode only. No light mode, no desktop.
 - Every color, size, spacing, radius and type value comes from tokens/tokens.json, through a semantic token. If nothing matches, stop and tell me.
 - Build from the components listed in docs/design-system.md. If nothing fits, stop and tell me before making a new one.
-- The recall is mocked. No speech-to-text, no audio, no model calls.
+- Recall is mocked. No speech-to-text, no audio, no model calls. Spoken answers are prepopulated per term and attempt in `src/app/recall/_lib/terms.ts`; the mic replays the scripted take rather than transcribing. Reverted 2026-09-25 at the owner's request after live transcription proved unreliable in practice.
 - Sentence case on every label, button and heading. Capitals only for proper nouns (Knowie, PRO).
 - Scope is docs/sprint-context.md. Build what is under Decisions. Nothing under Not building.
 - Every screen ships against the full Must-tier list for its flow, not just what its own Figma frame shows. Where a hard rule (voice-ux.md, sprint-context.md) conflicts with what Figma draws, stop and ask — don't silently match Figma and drop the rule.
