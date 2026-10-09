@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Keyboard } from "lucide-react";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
-import { MascotSlot } from "@/components/MascotSlot/MascotSlot";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
 import { MicIcon } from "@/components/icons/MicIcon";
 import { LeavingSheet } from "../../_components/LeavingSheet";
+import { KnowieAsks } from "../../_components/KnowieAsks";
 import { MicPermissionSheet } from "../../_components/MicPermissionSheet";
 import { SESSION_LENGTH, TERMS, progressFor } from "../../_lib/terms";
 import { skipTerm, useXpEarnedBefore } from "../../_lib/session";
@@ -54,10 +54,7 @@ export default function PromptPage() {
 
       <div className="prompt__body">
         <div className="prompt__spacer" />
-        <MascotSlot size="2XL" pose="standby" />
-        <div className="prompt__bubble">
-          <p className="prompt__question">{script.question}</p>
-        </div>
+        <KnowieAsks question={script.question} />
         <div className="prompt__spacer" />
 
         <div className="prompt__mic-row">

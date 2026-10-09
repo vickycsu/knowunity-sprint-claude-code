@@ -22,19 +22,6 @@
   padding: var(--color-size-space-200) var(--color-size-space-600) var(--color-size-space-800);
 }
 
-.recording__bubble {
-  width: 100%;
-  padding: var(--color-size-space-500);
-  background: var(--color-background-surface);
-  border-radius: var(--color-size-radius-600);
-}
-
-.recording__question {
-  margin: 0;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-m-regular);
-}
-
 .recording__transcript {
   width: 100%;
   padding: var(--color-size-space-400);
@@ -116,10 +103,69 @@
   cursor: default;
 }
 
-.recording__side-spacer {
+/* Pause/resume crossfade. The paused circle (140px) is smaller than the
+   listening frame (180px), so the control sits in a fixed slot the size of
+   the larger one — the row's height, and so the circle's centre, never
+   change between states. Durations are raw ms: tokens.json has no motion
+   scale yet (logged in component-gaps.md). */
+.recording__control-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  width: var(--color-size-space-1200);
-  height: var(--color-size-space-1200);
+  width: 180px;
+  height: 180px;
+}
+
+.recording__control-slot .recording-control--listening {
+  animation: recording-control-wake 240ms ease-out;
+}
+
+.recording__control-slot .recording-control--paused {
+  animation: recording-control-settle 240ms ease-out;
+}
+
+/* Fade only, no scale: the control must not move under the thumb when it
+   changes state. */
+@keyframes recording-control-wake {
+  from {
+    opacity: 0.4;
+  }
+}
+
+@keyframes recording-control-settle {
+  from {
+    opacity: 0.4;
+  }
+}
+
+.recording__stage-label,
+.recording__side-button,
+.recording__send {
+  transition:
+    opacity 200ms ease-out,
+    visibility 0s linear 0s;
+}
+
+.recording__stage-label[data-shown="false"],
+.recording__side-button[data-shown="false"],
+.recording__send[data-shown="false"] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 200ms ease-out,
+    visibility 0s linear 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recording__control-slot .recording-control {
+    animation: none;
+  }
+  .recording__stage-label,
+  .recording__side-button,
+  .recording__send {
+    transition: none;
+  }
 }
 
 .recording__send {

@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Pause, Trash2 } from "lucide-react";
+import { Send, Trash2 } from "lucide-react";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
-import { MascotSlot } from "@/components/MascotSlot/MascotSlot";
 import { RecordingControl } from "@/components/RecordingControl/RecordingControl";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
 import { LeavingSheet } from "../../_components/LeavingSheet";
+import { KnowieAsks } from "../../_components/KnowieAsks";
 import {
   SESSION_LENGTH,
   TERMS,
@@ -107,11 +107,7 @@ export default function RecordingPage() {
       />
 
       <div className="recording__body">
-        <MascotSlot size="2XL" pose="standby" />
-
-        <div className="recording__bubble">
-          <p className="recording__question">{question}</p>
-        </div>
+        <KnowieAsks question={question} />
 
         <div className="recording__transcript">
           {isPaused ? (
@@ -138,48 +134,57 @@ export default function RecordingPage() {
 
         <div className="recording__spacer" />
 
-        {isPaused ? <p className="recording__stage-label">Paused</p> : null}
+        {/* Everything below stays mounted in both states and only fades, so
+            pausing or resuming never moves the circle or the thumb's target.
+            `inert` keeps the faded-out half out of reach and out of the
+            accessibility tree. */}
+        <p className="recording__stage-label" data-shown={isPaused} aria-hidden={!isPaused}>
+          Paused
+        </p>
 
         <div className="recording__record-row">
-          {isPaused ? (
-            <button
-              type="button"
-              className="recording__side-button"
-              aria-label="Clear answer"
-              disabled={!hasWords}
-              onClick={handleClear}
-            >
-              <IconSlot size="250" icon={<Trash2 size="100%" strokeWidth={2} aria-hidden="true" />} />
-            </button>
-          ) : (
-            <span className="recording__side-spacer" aria-hidden="true" />
-          )}
+          <button
+            type="button"
+            className="recording__side-button"
+            data-shown={isPaused}
+            inert={!isPaused}
+            aria-label="Clear answer"
+            disabled={!hasWords}
+            onClick={handleClear}
+          >
+            <IconSlot size="250" icon={<Trash2 size="100%" strokeWidth={2} aria-hidden="true" />} />
+          </button>
 
-          <RecordingControl
-            state={isPaused ? "Paused" : "Listening"}
-            text={isPaused ? "Tap to resume" : "Tap to send"}
-            onClick={() => (isPaused ? setTakeState("listening") : handleSend())}
-          />
+          <div className="recording__control-slot">
+            <RecordingControl
+              state={isPaused ? "Paused" : "Listening"}
+              text={isPaused ? "Tap to resume" : "Tap to pause"}
+              onClick={() => (isPaused ? setTakeState("listening") : handlePause())}
+            />
+          </div>
 
-          {!isPaused ? (
-            <button
-              type="button"
-              className="recording__side-button"
-              aria-label="Pause"
-              onClick={handlePause}
-            >
-              <IconSlot size="250" icon={<Pause size="100%" strokeWidth={2} aria-hidden="true" />} />
-            </button>
-          ) : (
-            <span className="recording__side-spacer" aria-hidden="true" />
-          )}
+          <button
+            type="button"
+            className="recording__side-button"
+            data-shown={!isPaused}
+            inert={isPaused}
+            aria-label="Send"
+            disabled={!hasWords}
+            onClick={handleSend}
+          >
+            <IconSlot size="250" icon={<Send size="100%" strokeWidth={2} aria-hidden="true" />} />
+          </button>
         </div>
 
-        {isPaused ? (
-          <button type="button" className="recording__send" onClick={handleSend}>
-            Send
-          </button>
-        ) : null}
+        <button
+          type="button"
+          className="recording__send"
+          data-shown={isPaused}
+          inert={!isPaused}
+          onClick={handleSend}
+        >
+          Send
+        </button>
 
         <button type="button" className="recording__type-instead" onClick={handleTypeInstead}>
           Type instead

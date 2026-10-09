@@ -1,0 +1,27 @@
+.knowie-asks {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--color-size-space-100);
+  width: 100%;
+}
+
+.knowie-asks .mascot-slot {
+  flex-shrink: 0;
+}
+
+/* The corner nearest Knowie is tightened so the bubble reads as coming from
+   Knowie rather than floating beside them. */
+.knowie-asks__bubble {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--color-size-space-500);
+  background: var(--color-background-surface);
+  border-radius: var(--color-size-radius-600);
+  border-bottom-left-radius: var(--color-size-radius-100);
+}
+
+.knowie-asks__question {
+  margin: 0;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-headline-s);
+}

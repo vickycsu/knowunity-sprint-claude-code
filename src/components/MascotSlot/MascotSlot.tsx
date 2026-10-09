@@ -6,7 +6,7 @@ export type MascotSlotSize = "XL" | "2XL" | "3XL" | "4XL";
 // Homie's instance-swap property has 16 options; this product wires up only
 // the poses an actual recall state needs, matched against existing art in
 // public/images/ (see docs/component-proposals.md #4).
-export type MascotSlotPose = "standby" | "thinking";
+export type MascotSlotPose = "standby" | "thinking" | "giggling";
 
 const SIZE_PX: Record<MascotSlotSize, number> = {
   XL: 64,
@@ -18,6 +18,7 @@ const SIZE_PX: Record<MascotSlotSize, number> = {
 const POSE_IMAGE: Record<MascotSlotPose, string> = {
   standby: "/images/standby.png",
   thinking: "/images/thinking.png",
+  giggling: "/images/giggling.png",
 };
 
 export interface MascotSlotProps {

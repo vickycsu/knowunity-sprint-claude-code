@@ -88,7 +88,7 @@ export default function ResultPage() {
       />
 
       <div className="result__body">
-        <MascotSlot size="2XL" pose="standby" />
+        <MascotSlot size="2XL" pose={verdict === "pass" ? "giggling" : "standby"} />
 
         {verdictMeta ? (
           <div className={`result__verdict result__verdict--${verdictMeta.tone}`}>

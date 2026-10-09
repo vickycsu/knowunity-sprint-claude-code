@@ -24,36 +24,6 @@
   padding: var(--color-size-space-200) var(--color-size-space-600);
 }
 
-.text-turn__mascot {
-  flex-shrink: 0;
-  /* Collapsed rather than unmounted, so Knowie slides out of the way instead
-     of the question jumping up the screen when the keyboard opens. */
-  overflow: hidden;
-  transition:
-    height 160ms ease,
-    opacity 120ms ease;
-  height: var(--color-size-space-2400);
-  opacity: 1;
-}
-
-.text-turn--composing .text-turn__mascot {
-  height: 0;
-  opacity: 0;
-}
-
-.text-turn__bubble {
-  width: 100%;
-  padding: var(--color-size-space-500);
-  background: var(--color-background-surface);
-  border-radius: var(--color-size-radius-600);
-}
-
-.text-turn__question {
-  margin: 0;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-m-regular);
-}
-
 /* The compose block sits directly above the keyboard. --keyboard-inset is
    measured from visualViewport, so this clears the real keyboard rather than
    a guessed height. */
@@ -69,12 +39,6 @@
   /* Separates the compose block from the question above it once the two are
      pushed together by the keyboard. */
   border-top: var(--color-size-stroke-border) solid var(--color-border-default);
-}
-
-.text-turn__carried-note {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font: var(--color-typeScale-caption-m-regular);
 }
 
 .text-turn__input {

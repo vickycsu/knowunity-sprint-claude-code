@@ -1095,3 +1095,39 @@ worse than one with fixed answers.
   block reserves through `--keyboard-inset` stays at zero. **Flag if the
   prototype needs to be demoed on a laptop** — a drawn keyboard is the only
   way that screen looks right there.
+
+## Recording: pause/resume crossfade (2026-10-09)
+
+- **Pausing and resuming no longer moves anything.** Before, the side buttons
+  swapped sides, the "Paused" label and Send link were inserted, and the
+  140px paused circle replaced the 180px listening frame, so the whole row
+  jumped about 40px and the send button vanished from under the thumb. Now
+  every control stays mounted and fades (`inert` when hidden), and the
+  control sits in a fixed 180px slot so its centre never changes.
+- **Raw motion values, no token behind them:** 240ms fade (no scale, so it
+  never moves) on the recording control, 200ms opacity on the label, side buttons and Send.
+  tokens.json has no `motion.*` duration or easing scale. Same gap as the
+  MascotSlot bob and SkeletonLine pulse; `prefers-reduced-motion` turns all
+  of it off.
+- **The 180px slot repeats RecordingControl's own raw Listening size**
+  (already a logged deviation in `recording-control.css`). Flag to the system
+  owner along with that one.
+
+## Question hierarchy and correct-answer celebration (2026-10-09)
+
+- **`KnowieAsks` (`src/app/recall/_components/`)** replaces the stacked
+  2XL Knowie + bubble on Prompt, Recording and the typing turn. Knowie drops
+  to `MascotSlot size="XL"` beside the bubble, chat-avatar style, and the
+  question steps up from `body-m-regular` to `headline-s` so it leads the
+  screen. Screen-level composition of library parts, shared across three
+  screens per the "needed twice, promote it" rule. The typing turn's
+  collapse-Knowie-when-the-keyboard-opens behaviour was removed: Knowie no
+  longer takes vertical space.
+- **`MascotSlot` gained `pose="giggling"`** (owner's call, 2026-10-09),
+  wired to the existing `giggling.png`; used on Result for a pass. Plays a
+  one-shot hop-and-wiggle on appear. Partially resolves
+  docs/component-proposals.md #4; `excited`, `approving` and `confused`
+  remain unwired.
+- **Raw motion values again:** the giggle (900ms, overshoot cubic-bezier)
+  and the "Correct" badge pop (420ms, 180ms delay). Same missing `motion.*`
+  scale as above; both are off under `prefers-reduced-motion`.

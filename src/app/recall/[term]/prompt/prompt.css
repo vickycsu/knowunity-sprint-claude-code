@@ -20,19 +20,6 @@
   flex: 1 1 auto;
 }
 
-.prompt__bubble {
-  width: 100%;
-  padding: var(--color-size-space-500);
-  background: var(--color-background-surface);
-  border-radius: var(--color-size-radius-600);
-}
-
-.prompt__question {
-  margin: 0;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-m-regular);
-}
-
 .prompt__mic-row {
   /* Figma doesn't lay this out as a row with one gap value — the mic sits
      independently centered in the row (x=119, w=104, dead center of a

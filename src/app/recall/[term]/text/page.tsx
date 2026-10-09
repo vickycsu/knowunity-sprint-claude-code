@@ -3,9 +3,9 @@
 import { useState, useSyncExternalStore } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
-import { MascotSlot } from "@/components/MascotSlot/MascotSlot";
 import { Button } from "@/components/Button/Button";
 import { LeavingSheet } from "../../_components/LeavingSheet";
+import { KnowieAsks } from "../../_components/KnowieAsks";
 import { SESSION_LENGTH, TERMS, progressFor, questionForAttempt } from "../../_lib/terms";
 import { saveDraft, skipTerm, useCarriedDraft, useXpEarnedBefore } from "../../_lib/session";
 import { handOffKeyboardTo, releaseKeyboard } from "../../_lib/keyboard";
@@ -93,11 +93,6 @@ export default function TextPage() {
 
   const answer = typed ?? carried;
   const canSend = answer.trim().length > 0;
-  // Knowie steps aside when the space is genuinely needed: the keyboard is
-  // up, or there's an answer on screen that matters more than the mascot.
-  // Deliberately not tied to focus — autoFocus fires before React attaches
-  // the handler, so the first load would miss it.
-  const composing = inset > 0 || answer.length > 0;
 
   function handleSend() {
     if (!canSend) return;
@@ -138,7 +133,7 @@ export default function TextPage() {
 
   return (
     <main
-      className={`text-turn${composing ? " text-turn--composing" : ""}`}
+      className="text-turn"
       style={{ "--keyboard-inset": `${inset}px` } as React.CSSProperties}
     >
       <SessionBar
@@ -149,21 +144,10 @@ export default function TextPage() {
       />
 
       <div className="text-turn__prompt">
-        {/* On a phone this space is the difference between seeing your own
-            answer and not. The question itself never leaves. */}
-        <div className="text-turn__mascot">
-          <MascotSlot size="2XL" pose="standby" />
-        </div>
-        <div className="text-turn__bubble">
-          <p className="text-turn__question">{question}</p>
-        </div>
+        <KnowieAsks question={question} />
       </div>
 
       <div className="text-turn__compose">
-        {carried && typed === null ? (
-          <p className="text-turn__carried-note">Your answer so far — edit it however you like.</p>
-        ) : null}
-
         <textarea
           ref={mountInput}
           className="text-turn__input"
