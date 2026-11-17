@@ -2,24 +2,22 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Keyboard } from "lucide-react";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
 import { MascotSlot } from "@/components/MascotSlot/MascotSlot";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
-import { MicIcon } from "@/components/icons/MicIcon";
 import { CheckIcon } from "@/components/icons/CheckIcon";
 import { InfoCircleIcon } from "@/components/icons/InfoCircleIcon";
 import { AlertCircleIcon } from "@/components/icons/AlertCircleIcon";
 import { Button } from "@/components/Button/Button";
 import { LeavingSheet } from "../../_components/LeavingSheet";
+import { AnswerControls } from "../../_components/AnswerControls";
 import {
   SESSION_LENGTH,
   TERMS,
   progressFor,
-  questionForAttempt,
   type Verdict,
 } from "../../_lib/terms";
-import { readAttempt, skipTerm, useAttempt, useXpThrough } from "../../_lib/session";
+import { readAttempt, takeHint, useAttempt, useQuestion, useXpThrough } from "../../_lib/session";
 import { claimKeyboard } from "../../_lib/keyboard";
 import "./result.css";
 
@@ -47,10 +45,15 @@ export default function ResultPage() {
   // session store, so this screen renders the verdict for the answer that
   // was actually given.
   const attempt = useAttempt(term, attemptNumber);
-  const emptyQuestion = questionForAttempt(term, attemptNumber);
+  const emptyQuestion = useQuestion(term, attemptNumber);
 
   const verdict = attempt?.verdict ?? "empty";
-  const verdictMeta = VERDICT_META[verdict];
+  // A hint the student asked for isn't a judgement of an answer, so it
+  // gets a neutral "Hint" tag instead of "Almost there" / "Try again".
+  const verdictMeta =
+    attempt?.requested && (verdict === "hint1" || verdict === "hint2")
+      ? { label: "Hint", icon: <InfoCircleIcon />, tone: "partial" }
+      : VERDICT_META[verdict];
   // Progress advances on any terminal verdict — a reveal resolves the term
   // exactly as a pass does. Hints and empty takes leave it open.
   const isResolved = verdict === "pass" || verdict === "reveal";
@@ -69,9 +72,22 @@ export default function ResultPage() {
     else router.push(`/recall/${nextTerm}/prompt`);
   }
 
-  function handleSkip() {
-    skipTerm(term);
-    handleAdvance();
+  // Hint for the next turn of this term: the one after the attempt shown.
+  function handleHint() {
+    takeHint(term, attemptNumber + 1);
+    router.push(`/recall/${term}/result?attempt=${attemptNumber + 1}`);
+  }
+
+  // After a pass the screen already asks the next term's question, so its
+  // hint belongs to that term's first turn.
+  function handleNextTermHint() {
+    takeHint(nextTerm, 1);
+    router.push(`/recall/${nextTerm}/result?attempt=1`);
+  }
+
+  function typeInstead(path: string) {
+    claimKeyboard();
+    router.push(path);
   }
 
   function handleRetry() {
@@ -124,114 +140,36 @@ export default function ResultPage() {
         <div className="result__spacer" />
 
         {verdict === "empty" ? (
-          <div className="result__actions">
-            <Button cta="Record again" variant="Primary" size="L" onClick={handleRetry} />
-            <button
-              type="button"
-              className="result__link"
-              onClick={() => {
-                  claimKeyboard();
-                  router.push(`/recall/${term}/text`);
-                }}
-            >
-              Type instead
-            </button>
-          </div>
+          <AnswerControls
+            caption="Try that again"
+            onMic={handleRetry}
+            onTypeInstead={() => typeInstead(`/recall/${term}/text?attempt=${attemptNumber + 1}`)}
+            onHint={handleHint}
+          />
         ) : verdict === "reveal" ? (
-          // Caption above a mic, matching the hint and pass rows and the
-          // live app's own revealed-answer screen — a filled primary button
-          // read as a different kind of action from every other "answer
-          // this" moment in the loop, when it is the same one.
-          <>
-            <p className="result__caption">Try it in your own words</p>
-            <div className="result__mic-row">
-              <button
-                type="button"
-                className="result__mic"
-                aria-label="Start speaking"
-                onClick={() => router.push(`/recall/${term}/recording?attempt=sayback`)}
-              >
-                <IconSlot size="400" icon={<MicIcon />} />
-              </button>
-              <button
-                type="button"
-                className="result__type-instead"
-                aria-label="Type instead"
-                onClick={() => {
-                  claimKeyboard();
-                  router.push(`/recall/${term}/text?attempt=sayback`);
-                }}
-              >
-                <IconSlot size="250" icon={<Keyboard size="100%" strokeWidth={2} aria-hidden="true" />} />
-              </button>
-            </div>
-            <button type="button" className="result__skip" onClick={handleAdvance}>
-              Next question
-            </button>
-          </>
+          // No hint after the answer: the ladder is finished.
+          <AnswerControls
+            caption="Try it in your own words"
+            onMic={() => router.push(`/recall/${term}/recording?attempt=sayback`)}
+            onTypeInstead={() => typeInstead(`/recall/${term}/text?attempt=sayback`)}
+          >
+            <Button cta="Next question" variant="Secondary" size="L" onClick={handleAdvance} />
+          </AnswerControls>
         ) : verdict === "hint1" || verdict === "hint2" ? (
-          <>
-            {attempt?.caption ? <p className="result__caption">{attempt.caption}</p> : null}
-            <div className="result__mic-row result__mic-row--hint">
-              <button
-                type="button"
-                className="result__mic result__mic--hint"
-                aria-label="Start speaking"
-                onClick={handleRetry}
-              >
-                <IconSlot size="400" icon={<MicIcon />} />
-              </button>
-              {/* Figma's hint frames draw the mic alone, with no keyboard
-                  affordance. Added anyway: voice-ux.md's "always offer a
-                  non-voice path" is a hard rule, and a retry is exactly
-                  where a student who can't speak gets stuck. Flagged in
-                  component-gaps.md. */}
-              <button
-                type="button"
-                className="result__type-instead"
-                aria-label="Type instead"
-                onClick={() => {
-                  claimKeyboard();
-                  router.push(`/recall/${term}/text?attempt=${attemptNumber + 1}`);
-                }}
-              >
-                <IconSlot size="250" icon={<Keyboard size="100%" strokeWidth={2} aria-hidden="true" />} />
-              </button>
-            </div>
-            <button type="button" className="result__skip" onClick={handleSkip}>
-              Skip question
-            </button>
-          </>
+          <AnswerControls
+            caption={attempt?.caption}
+            onMic={handleRetry}
+            onTypeInstead={() => typeInstead(`/recall/${term}/text?attempt=${attemptNumber + 1}`)}
+            onHint={handleHint}
+          />
         ) : isLastTerm || !nextScript ? (
           <Button cta="Continue" variant="Primary" size="L" onClick={handleAdvance} />
         ) : (
-          <>
-            <div className="result__mic-row">
-              <button
-                type="button"
-                className="result__mic"
-                aria-label="Start speaking"
-                onClick={() => router.push(`/recall/${nextTerm}/recording`)}
-              >
-                <IconSlot size="400" icon={<MicIcon />} />
-              </button>
-              <button
-                type="button"
-                className="result__type-instead"
-                aria-label="Type instead"
-                onClick={() => {
-                  claimKeyboard();
-                  router.push(`/recall/${nextTerm}/text`);
-                }}
-              >
-                <IconSlot size="250" icon={<Keyboard size="100%" strokeWidth={2} aria-hidden="true" />} />
-              </button>
-            </div>
-
-            <button type="button" className="result__skip" onClick={handleSkip}>
-              Skip question
-            </button>
-          </>
+          <AnswerControls
+            onMic={() => router.push(`/recall/${nextTerm}/recording`)}
+            onTypeInstead={() => typeInstead(`/recall/${nextTerm}/text`)}
+            onHint={handleNextTermHint}
+          />
         )}
       </div>
 

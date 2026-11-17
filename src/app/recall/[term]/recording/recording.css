@@ -30,14 +30,14 @@
   border-radius: var(--color-size-radius-400);
 }
 
+/* No placeholder: the box waits empty and the words appear as they're
+   spoken. Held at one line so the first word doesn't resize the box. */
 .recording__transcript-text {
+  min-height: 1lh;
   margin: 0;
+  color: var(--color-text-primary);
   font: var(--color-typeScale-body-s-regular);
   font-style: italic;
-}
-
-.recording__transcript-text--live {
-  color: var(--color-text-primary);
 }
 
 .recording__transcript-input {
@@ -57,14 +57,61 @@
   color: var(--color-text-primary);
 }
 
-.recording__spacer {
-  flex: 1 1 auto;
+/* Redo and Edit live inside the answer box, on the take they act on. */
+.recording__transcript-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--color-size-space-200);
+  margin-top: var(--color-size-space-200);
 }
 
-.recording__stage-label {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font: var(--color-typeScale-body-s-regular);
+.recording__transcript-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--color-size-space-100);
+  /* space-1100 (44px) is the documented minimum touch target. */
+  min-height: var(--color-size-space-1100);
+  padding: 0 var(--color-size-space-200);
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+  cursor: pointer;
+}
+
+.recording__transcript-action:disabled {
+  color: var(--color-interactive-disabled);
+  cursor: default;
+}
+
+/* Editing: the circle, the send icon and Type instead fade back so the
+   text box is the only thing asking for attention. */
+.recording__record-row,
+.recording__links {
+  width: 100%;
+  transition: opacity 200ms ease-out;
+}
+
+.recording--editing .recording__record-row,
+.recording--editing .recording__links {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recording__record-row,
+  .recording__links {
+    transition: none;
+  }
+}
+
+.recording__side-spacer {
+  flex-shrink: 0;
+  width: var(--color-size-space-1200);
+  height: var(--color-size-space-1200);
+}
+
+.recording__spacer {
+  flex: 1 1 auto;
 }
 
 .recording__record-row {
@@ -105,7 +152,7 @@
 
 /* Pause/resume crossfade. The paused circle (140px) is smaller than the
    listening frame (180px), so the control sits in a fixed slot the size of
-   the larger one — the row's height, and so the circle's centre, never
+   the larger one (illustration-2250, 180px) — the row's height, and so the circle's centre, never
    change between states. Durations are raw ms: tokens.json has no motion
    scale yet (logged in component-gaps.md). */
 .recording__control-slot {
@@ -113,43 +160,74 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 180px;
-  height: 180px;
+  width: var(--color-size-illustration-2250);
+  height: var(--color-size-illustration-2250);
 }
 
-.recording__control-slot .recording-control--listening {
-  animation: recording-control-wake 240ms ease-out;
+/* Crossfade: on each state change, a copy of the outgoing state's circle is
+   laid over the incoming one and dissolves, so grey melts into the bloom
+   (and back) in place rather than one swapping for the other. The overlay
+   repeats RecordingControl's own fills; it never takes taps. */
+.recording__control-slot {
+  position: relative;
 }
 
-.recording__control-slot .recording-control--paused {
-  animation: recording-control-settle 240ms ease-out;
+.recording__control-slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 140px;
+  height: 140px;
+  margin: auto;
+  border-radius: var(--color-size-radius-full);
+  pointer-events: none;
+  opacity: 0;
 }
 
-/* Fade only, no scale: the control must not move under the thumb when it
-   changes state. */
-@keyframes recording-control-wake {
+/* Resuming: the grey paused circle dissolves off the bloom. */
+.recording__control-slot[data-state="listening"]::after {
+  background: var(--color-background-surface);
+  animation: recording-control-dissolve 320ms ease-out;
+}
+
+/* Pausing: the glowing bloom dissolves off the grey circle. */
+.recording__control-slot[data-state="paused"]::after {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-brand-on-subtle),
+    var(--color-interactive-primary-active)
+  );
+  box-shadow: 0 0 32px var(--color-accent-brand-bold);
+  animation: recording-control-dissolve-paused 320ms ease-out;
+}
+
+/* Two identical keyframes under different names, so the animation restarts
+   on every state change instead of only the first. */
+@keyframes recording-control-dissolve {
   from {
-    opacity: 0.4;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
-@keyframes recording-control-settle {
+@keyframes recording-control-dissolve-paused {
   from {
-    opacity: 0.4;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
-.recording__stage-label,
-.recording__side-button,
-.recording__send {
+.recording__side-button {
   transition:
     opacity 200ms ease-out,
     visibility 0s linear 0s;
 }
 
-.recording__stage-label[data-shown="false"],
-.recording__side-button[data-shown="false"],
-.recording__send[data-shown="false"] {
+.recording__side-button[data-shown="false"] {
   opacity: 0;
   visibility: hidden;
   transition:
@@ -158,39 +236,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .recording__control-slot .recording-control {
+  .recording__control-slot::after {
     animation: none;
   }
-  .recording__stage-label,
-  .recording__side-button,
-  .recording__send {
+  .recording__side-button {
     transition: none;
   }
 }
 
-.recording__send {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* space-1100 (44px) is the documented minimum touch target — the label text
-     stays its normal size, this only pads the hit area out to the gate. Same
-     pattern as .result__skip/.result__link. */
-  min-width: var(--color-size-space-1100);
-  min-height: var(--color-size-space-1100);
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-s-bold);
-  cursor: pointer;
-}
 
-
-/* Placeholder state: nothing transcribed yet. Distinct from a real
-   transcript so an empty box never reads as "it heard me say nothing". */
-.recording__transcript-text--waiting {
-  color: var(--color-text-secondary);
-}
 
 /* Mic-not-capturing warning. Shown only when the input level stayed below
    the audible floor for the whole grace window and nothing was transcribed
@@ -214,26 +268,10 @@
    same pattern as the record-row gap above — the shared RecordingControl
    keeps its static Figma appearance for every other consumer. */
 .recording__record-row .recording-control--listening .recording-control__bloom {
-  transform: translate(-50%, -50%)
-    scale(calc(1 + var(--recording-level, 0) * 0.08));
-  transition: transform 90ms linear;
-}
-
-/* The keyboard escape, reachable at any point in a take — not only before
-   the student starts talking. Styled as a quiet link rather than a button so
-   it never competes with the record control above it. */
-.recording__type-instead {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* space-1100 (44px) is the documented minimum touch target — the label text
-     stays its normal size, this only pads the hit area out to the gate. */
-  min-width: var(--color-size-space-1100);
-  min-height: var(--color-size-space-1100);
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-link-hover);
-  font: var(--color-typeScale-body-s-regular);
-  cursor: pointer;
+  /* The standalone scale property, not transform: animating transform also
+     animated the bloom's translate(-50%, -50%) centring whenever React
+     reused an element as the bloom on resume, so it slid in from the
+     bottom right. Scale alone can only breathe in place. */
+  scale: calc(1 + var(--recording-level, 0) * 0.08);
+  transition: scale 90ms linear;
 }

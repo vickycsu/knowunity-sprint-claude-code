@@ -18,6 +18,7 @@
   --color-color-violet-300: #a78bfa;
   --color-color-violet-400: #7b65e0;
   --color-color-violet-500: #9178e6;
+  --color-color-violet-600: #5b46c4;
   --color-color-violet-900: #15103a;
   --color-color-violet-950: #0e0a18;
   --color-color-violet-500-2: #9178e6;
@@ -226,6 +227,8 @@
   --color-accent-brand-subtle: #15103a;
   --color-accent-brand-on-subtle: #7b65e0;
   --color-accent-brand-ring-gradient: linear-gradient(135deg, #7080eb, #beacfc);
+  --color-accent-brand-depth: #5b46c4;
+  --color-accent-brand-gloss: rgba(255, 255, 255, 0.4);
   --color-accent-coral-bold: #fb965b;
   --color-accent-coral-on-bold: #2e0f06;
   --color-accent-coral-subtle: #512e2c;

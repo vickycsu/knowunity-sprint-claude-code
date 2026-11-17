@@ -1131,3 +1131,79 @@ worse than one with fixed answers.
 - **Raw motion values again:** the giggle (900ms, overshoot cubic-bezier)
   and the "Correct" badge pop (420ms, 180ms delay). Same missing `motion.*`
   scale as above; both are off under `prefers-reduced-motion`.
+
+## Pause/resume crossfade overlay (2026-11-17)
+
+- **The overlay that dissolves between states repeats RecordingControl's own
+  raw values**: the 140px circle and the 32px glow. Both are already logged
+  deviations on the component itself; the overlay has to match them exactly
+  or the crossfade shows a seam. Added to KNOWN_EXCEPTIONS alongside the
+  component's. The 180px slot and the giggle offsets now use tokens
+  (illustration-2250, space-200, space-negative-300/100).
+
+## Study plan: 3D medal rings and a clear next step (2026-11-17)
+
+- **New tokens (owner-approved):** primitive `color.violet.600` (#5b46c4),
+  semantic `accent.brand.depth` (the darker lip under a raised ring) and
+  `accent.brand.gloss` (alpha-light-40 white, the top shine and rim).
+- **Done rings** read as raised medals, Duolingo-style: gradient face, light
+  inner rim, soft shine across the top, darker lip underneath. The star went
+  from IconSlot 300 to 400.
+- **The next step** ("Explain it out loud") is raised in solid brand with
+  the same lip, pulses a soft ring outward, and carries a bobbing "Start"
+  tag (library `Chips`, Primary, active). Pressing it pushes the face down
+  onto its lip. The pulse is limited to the tappable node: "Practice Exam",
+  current after the session, has no destination.
+- **Raw motion values again:** 1.8s pulse and bob. Same missing `motion.*`
+  scale; both off under `prefers-reduced-motion`.
+
+## Standardized answer controls; Hint replaces Skip (2026-11-17)
+
+- **`AnswerControls` / `AnswerLinks` (`src/app/recall/_components/`)** — one
+  layout for every answer moment: optional caption, the mic alone and
+  centred (one size everywhere; the smaller hint-screen mic is gone), then
+  "Type instead" left / "Hint" right. The typing turn uses `AnswerLinks`
+  with "Speak instead". The keyboard icon button is removed everywhere.
+  Measured: the links row sits at the same height (768–812px) on Prompt,
+  hint, reveal and Recording.
+- **Hint replaces "Skip question"** (owner's call; sprint-context.md
+  updated, overriding voice-ux.md's "Skip a term" Must). `takeHint()` in
+  session.ts records a requested attempt on the shared ladder — hint 1,
+  hint 2, reveal — so XP and the Summary buckets follow the existing rules.
+  A requested hint is tagged "Hint" rather than "Almost there" / "Try again",
+  since there was no answer to judge. Not offered after a reveal or on
+  say-it-back.
+- **Hint copy per term (`hints` in terms.ts) is draft** for terms 1, 3 and
+  4; term 2 adapts its existing hint questions. Needs a copy review.
+- **"Record again" on the empty take is now the mic** with "Try that again"
+  above it, and **"Next question" after a reveal is a Secondary button**
+  above the links, so the links row never moves.
+- **`skipTerm()` is no longer called from any screen.** Left in session.ts;
+  remove it if skip doesn't come back.
+
+## Recording paused state: Redo and Edit in the answer box (2026-11-17)
+
+- **Send is icon-only and stays put.** The send button beside the circle no
+  longer hides when paused, and the "Send" text button under the row is
+  gone. sprint-context.md's "labeled send control" rule updated (owner's
+  call); the button keeps "Send" as its accessible name.
+- **The trash button is gone.** A spacer holds its slot so the circle stays
+  centred.
+- **Redo and Edit sit inside the answer box** (lucide RotateCcw / Pencil
+  over IconSlot 150, body-s-bold labels, 44px targets). The paused take is
+  read-only until Edit, which swaps in the textarea and becomes "Done".
+  Redo empties the take and resumes listening in one tap, replacing "clear,
+  stay paused" (sprint-context.md updated).
+
+## Recording: no "Paused" label, no Hint (2026-11-17)
+
+- **"Paused" label removed** (owner's call; sprint-context.md updated). The
+  grey circle and "Tap to resume" carry the state, also for screen readers.
+- **No Hint while recording.** Recording shows "Type instead" alone,
+  centred under the circle (`AnswerLinks centered`). Every other answer
+  screen keeps Type instead / Hint. The circle centre holds at the same
+  height in both states (measured 662px).
+- **Editing (2026-11-17):** Edit becomes Send (send icon, sends the edited
+  take). While editing, the circle, the send icon and Type instead fade out
+  (200ms, raw — no motion token) and go `inert`. Leaving edit mode without
+  sending is only possible through Redo.

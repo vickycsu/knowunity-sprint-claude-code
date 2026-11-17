@@ -6,8 +6,15 @@ import { SessionBar } from "@/components/SessionBar/SessionBar";
 import { Button } from "@/components/Button/Button";
 import { LeavingSheet } from "../../_components/LeavingSheet";
 import { KnowieAsks } from "../../_components/KnowieAsks";
-import { SESSION_LENGTH, TERMS, progressFor, questionForAttempt } from "../../_lib/terms";
-import { saveDraft, skipTerm, useCarriedDraft, useXpEarnedBefore } from "../../_lib/session";
+import { TERMS, progressFor, SESSION_LENGTH } from "../../_lib/terms";
+import { AnswerLinks } from "../../_components/AnswerControls";
+import {
+  saveDraft,
+  takeHint,
+  useCarriedDraft,
+  useQuestion,
+  useXpEarnedBefore,
+} from "../../_lib/session";
 import { handOffKeyboardTo, releaseKeyboard } from "../../_lib/keyboard";
 import "./text.css";
 
@@ -78,10 +85,11 @@ export default function TextPage() {
   // version uses, so the two can't produce different records.
   const isSayItBack = attemptParam === "sayback";
   const attemptNumber = isSayItBack ? 4 : Number(attemptParam ?? "1");
+  const askedQuestion = useQuestion(term, attemptNumber);
 
   const question = isSayItBack
     ? (TERMS[term] ?? TERMS[1]).question
-    : questionForAttempt(term, attemptNumber);
+    : askedQuestion;
   const xpBefore = useXpEarnedBefore(term);
   const carried = useCarriedDraft(term, attemptNumber);
   const inset = useSyncExternalStore(subscribeViewport, keyboardInset, () => 0);
@@ -124,12 +132,12 @@ export default function TextPage() {
     );
   }
 
-  function handleSkip() {
+  function handleHint() {
     releaseKeyboard();
-    skipTerm(term);
-    if (term >= SESSION_LENGTH) router.push("/recall/summary");
-    else router.push(`/recall/${term + 1}/prompt`);
+    takeHint(term, attemptNumber);
+    router.push(`/recall/${term}/result?attempt=${attemptNumber}`);
   }
+
 
   return (
     <main
@@ -178,14 +186,11 @@ export default function TextPage() {
           onClick={handleSend}
         />
 
-        <div className="text-turn__links">
-          <button type="button" className="text-turn__link" onClick={handleSpeakInstead}>
-            Speak instead
-          </button>
-          <button type="button" className="text-turn__skip" onClick={handleSkip}>
-            Skip question
-          </button>
-        </div>
+        <AnswerLinks
+          switchLabel="Speak instead"
+          onSwitch={handleSpeakInstead}
+          onHint={isSayItBack ? undefined : handleHint}
+        />
       </div>
 
       <LeavingSheet

@@ -2,20 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Send, Trash2 } from "lucide-react";
+import { Pencil, RotateCcw, Send } from "lucide-react";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
 import { RecordingControl } from "@/components/RecordingControl/RecordingControl";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
 import { LeavingSheet } from "../../_components/LeavingSheet";
 import { KnowieAsks } from "../../_components/KnowieAsks";
-import {
-  SESSION_LENGTH,
-  TERMS,
-  attemptFor,
-  progressFor,
-  questionForAttempt,
-} from "../../_lib/terms";
-import { saveDraft, useXpEarnedBefore } from "../../_lib/session";
+import { AnswerLinks } from "../../_components/AnswerControls";
+import { SESSION_LENGTH, TERMS, attemptFor, progressFor } from "../../_lib/terms";
+import { saveDraft, useQuestion, useXpEarnedBefore } from "../../_lib/session";
 import { claimKeyboard } from "../../_lib/keyboard";
 import "./recording.css";
 
@@ -44,12 +39,17 @@ export default function RecordingPage() {
   const scriptedTranscript = isSayItBack
     ? SAY_IT_BACK_TRANSCRIPT
     : attemptFor(term, attemptNumber).transcript;
-  const question = isSayItBack ? script.question : questionForAttempt(term, attemptNumber);
+  const askedQuestion = useQuestion(term, attemptNumber);
+  const question = isSayItBack ? script.question : askedQuestion;
 
   const [takeState, setTakeState] = useState<TakeState>("listening");
+  // The pause/resume crossfade only plays after a real state change, not on arrival.
+  const [hasToggled, setHasToggled] = useState(false);
   // What the student has "said" so far. Starts empty and fills in while
   // listening; a scripted empty take simply never fills.
   const [transcript, setTranscript] = useState("");
+  // Paused text is read-only until the student taps Edit.
+  const [editing, setEditing] = useState(false);
   const [heardWords, setHeardWords] = useState(0);
   const [leavingSheetOpen, setLeavingSheetOpen] = useState(false);
   const xpBefore = useXpEarnedBefore(term);
@@ -71,11 +71,20 @@ export default function RecordingPage() {
   function handlePause() {
     setTranscript(live);
     setTakeState("paused");
+    setHasToggled(true);
   }
 
-  function handleClear() {
+  // Redo: throw the take away and go straight back to listening.
+  function handleRedo() {
     setTranscript("");
     setHeardWords(0);
+    setEditing(false);
+    setTakeState("listening");
+  }
+
+  function handleResume() {
+    setEditing(false);
+    setTakeState("listening");
   }
 
   function handleSend() {
@@ -98,7 +107,7 @@ export default function RecordingPage() {
   const isPaused = takeState === "paused";
 
   return (
-    <main className="recording">
+    <main className={`recording${editing ? " recording--editing" : ""}`}>
       <SessionBar
         progress={progressFor(term)}
         counterText={`${term}/${SESSION_LENGTH}`}
@@ -111,23 +120,51 @@ export default function RecordingPage() {
 
         <div className="recording__transcript">
           {isPaused ? (
-            <textarea
-              className="recording__transcript-input"
-              value={transcript}
-              onChange={(event) => setTranscript(event.target.value)}
-              rows={2}
-              aria-label="Your answer"
-            />
+            <>
+              {editing ? (
+                <textarea
+                  className="recording__transcript-input"
+                  value={transcript}
+                  onChange={(event) => setTranscript(event.target.value)}
+                  rows={2}
+                  aria-label="Your answer"
+                  autoFocus
+                />
+              ) : (
+                <p className="recording__transcript-text">{transcript}</p>
+              )}
+              <div className="recording__transcript-actions">
+                <button type="button" className="recording__transcript-action" onClick={handleRedo}>
+                  <IconSlot size="150" icon={<RotateCcw size="100%" strokeWidth={2} aria-hidden="true" />} />
+                  Redo
+                </button>
+                {/* While editing, the student is already composing — Edit
+                    becomes Send, right where their attention is. */}
+                {editing ? (
+                  <button
+                    type="button"
+                    className="recording__transcript-action"
+                    disabled={!hasWords}
+                    onClick={handleSend}
+                  >
+                    <IconSlot size="150" icon={<Send size="100%" strokeWidth={2} aria-hidden="true" />} />
+                    Send
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="recording__transcript-action"
+                    onClick={() => setEditing(true)}
+                  >
+                    <IconSlot size="150" icon={<Pencil size="100%" strokeWidth={2} aria-hidden="true" />} />
+                    Edit
+                  </button>
+                )}
+              </div>
+            </>
           ) : (
-            <p
-              className={`recording__transcript-text${
-                hasWords
-                  ? " recording__transcript-text--live"
-                  : " recording__transcript-text--waiting"
-              }`}
-              aria-live="polite"
-            >
-              {hasWords ? live : "Start explaining — your words appear here."}
+            <p className="recording__transcript-text" aria-live="polite">
+              {live}
             </p>
           )}
         </div>
@@ -138,36 +175,24 @@ export default function RecordingPage() {
             pausing or resuming never moves the circle or the thumb's target.
             `inert` keeps the faded-out half out of reach and out of the
             accessibility tree. */}
-        <p className="recording__stage-label" data-shown={isPaused} aria-hidden={!isPaused}>
-          Paused
-        </p>
+        {/* Faded out while editing: the student is typing, so the voice
+            controls step back. `inert` keeps them out of reach meanwhile. */}
+        <div className="recording__record-row" inert={editing}>
+          {/* Balances the send button so the circle stays centred. */}
+          <span className="recording__side-spacer" aria-hidden="true" />
 
-        <div className="recording__record-row">
-          <button
-            type="button"
-            className="recording__side-button"
-            data-shown={isPaused}
-            inert={!isPaused}
-            aria-label="Clear answer"
-            disabled={!hasWords}
-            onClick={handleClear}
-          >
-            <IconSlot size="250" icon={<Trash2 size="100%" strokeWidth={2} aria-hidden="true" />} />
-          </button>
-
-          <div className="recording__control-slot">
+          <div className="recording__control-slot" data-state={hasToggled ? takeState : undefined}>
             <RecordingControl
               state={isPaused ? "Paused" : "Listening"}
               text={isPaused ? "Tap to resume" : "Tap to pause"}
-              onClick={() => (isPaused ? setTakeState("listening") : handlePause())}
+              onClick={isPaused ? handleResume : handlePause}
             />
           </div>
 
+          {/* Send stays put in both states — the one way to commit the take. */}
           <button
             type="button"
             className="recording__side-button"
-            data-shown={!isPaused}
-            inert={isPaused}
             aria-label="Send"
             disabled={!hasWords}
             onClick={handleSend}
@@ -176,19 +201,9 @@ export default function RecordingPage() {
           </button>
         </div>
 
-        <button
-          type="button"
-          className="recording__send"
-          data-shown={isPaused}
-          inert={!isPaused}
-          onClick={handleSend}
-        >
-          Send
-        </button>
-
-        <button type="button" className="recording__type-instead" onClick={handleTypeInstead}>
-          Type instead
-        </button>
+        <div className="recording__links" inert={editing}>
+          <AnswerLinks switchLabel="Type instead" onSwitch={handleTypeInstead} centered />
+        </div>
       </div>
 
       <LeavingSheet

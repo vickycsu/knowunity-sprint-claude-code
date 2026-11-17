@@ -109,7 +109,7 @@
 
 .btn-icon--primary .btn-icon__inner {
   background-color: var(--color-interactive-primary);
-  border: 1px solid var(--color-border-default);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
   color: var(--color-interactive-on-primary);
 }
 .btn-icon--primary.btn-icon--pressed .btn-icon__inner {
@@ -123,7 +123,7 @@
 }
 .btn-icon--primary.btn-icon--loading .btn-icon__inner {
   background-color: var(--color-interactive-primary);
-  border: 1px solid var(--color-border-default);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
   color: var(--color-interactive-on-primary);
 }
 

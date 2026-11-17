@@ -1,0 +1,60 @@
+.answer-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-400);
+  width: 100%;
+}
+
+.answer-controls__caption {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-s-regular);
+}
+
+/* One mic size everywhere. The icon is IconSlot's largest documented size
+   (icon.400, 32px); Figma's 46px has no slot size. */
+.answer-controls__mic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--color-size-illustration-1300);
+  height: var(--color-size-illustration-1300);
+  padding: 0;
+  border: none;
+  border-radius: var(--color-size-radius-full);
+  background: var(--color-interactive-primary);
+  color: var(--color-interactive-on-primary);
+  cursor: pointer;
+}
+
+.answer-controls .btn {
+  width: 100%;
+}
+
+.answer-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.answer-links--centered {
+  justify-content: center;
+}
+
+.answer-links__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* space-1100 (44px) is the documented minimum touch target — the label
+     stays its normal size, this only pads the hit area out to the gate. */
+  min-width: var(--color-size-space-1100);
+  min-height: var(--color-size-space-1100);
+  padding: 0 var(--color-size-space-200);
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font: var(--color-typeScale-body-s-bold);
+  cursor: pointer;
+}

@@ -7,15 +7,18 @@
   background: var(--color-background-scrim);
 }
 
+/* Page-dark rather than surface-grey, so the sheet reads as a continuation
+   of the app with a hairline top edge, as in the live app's version. */
 .leaving-sheet {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--color-size-space-200);
   width: 100%;
   max-width: var(--color-responsive-mobile-frame-width);
-  padding: var(--color-size-space-300) var(--color-size-space-500) var(--color-size-space-600);
-  background: var(--color-background-surface);
+  padding: var(--color-size-space-300) var(--color-size-space-500) var(--color-size-space-800);
+  background: var(--color-background-page);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
+  border-bottom: none;
   border-radius: var(--color-size-radius-800) var(--color-size-radius-800) 0 0;
 }
 
@@ -26,21 +29,39 @@
   background: var(--color-border-strong);
 }
 
+/* Knowie gets real room: the reference gives them most of the sheet. */
+.leaving-sheet__mascot {
+  padding: var(--color-size-space-1600) 0 var(--color-size-space-800);
+}
+
+.leaving-sheet__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--color-size-space-200);
+  margin-bottom: var(--color-size-space-800);
+  text-align: center;
+}
+
 .leaving-sheet__title {
   margin: 0;
   color: var(--color-text-primary);
-  font: var(--color-typeScale-headline-s);
+  font: var(--color-typeScale-headline-l);
+}
+
+.leaving-sheet__body {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font: var(--color-typeScale-body-m-regular);
+}
+
+.leaving-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
+  width: 100%;
 }
 
 .leaving-sheet .btn {
   width: 100%;
-}
-
-.leaving-sheet__exit {
-  padding: var(--color-size-space-600) 0 0;
-  border: none;
-  background: none;
-  color: var(--color-text-link-hover);
-  font: var(--color-typeScale-body-s-regular);
-  cursor: pointer;
 }

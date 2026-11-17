@@ -38,10 +38,10 @@ export function MicPermissionSheet({
         <MascotSlot size="2XL" pose="standby" />
         <h2 className="mic-sheet__title">Explain it to Knowie</h2>
         <p className="mic-sheet__body">Make it stick by explaining it out loud</p>
-        <Button cta="Allow microphone" variant="Primary" size="L" onClick={onAllow} />
-        <button type="button" className="mic-sheet__link" onClick={onTypeInstead}>
-          Type instead
-        </button>
+        <div className="mic-sheet__actions">
+          <Button cta="Allow microphone" variant="Primary" size="L" onClick={onAllow} />
+          <Button cta="Type instead" variant="Secondary" size="L" onClick={onTypeInstead} />
+        </div>
       </div>
     </div>
   );

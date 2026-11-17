@@ -104,12 +104,6 @@
   font: var(--color-typeScale-body-s-regular);
 }
 
-.result__caption {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font: var(--color-typeScale-body-s-regular);
-}
-
 .result__bubble {
   display: flex;
   flex-direction: column;
@@ -128,102 +122,4 @@
 
 .result__spacer {
   flex: 1 1 auto;
-}
-
-.result__mic-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.result__mic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: var(--color-size-illustration-1300);
-  height: var(--color-size-illustration-1300);
-  padding: 0;
-  border: none;
-  border-radius: var(--color-size-radius-full);
-  background: var(--color-interactive-primary);
-  color: var(--color-interactive-on-primary);
-  cursor: pointer;
-}
-
-.result__type-instead {
-  position: absolute;
-  right: var(--color-size-space-700);
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: var(--color-size-space-1100);
-  height: var(--color-size-space-1100);
-  padding: 0;
-  box-sizing: border-box;
-  border: var(--color-size-stroke-heavy-border) solid var(--color-text-secondary);
-  border-radius: var(--color-size-radius-full);
-  background: none;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.result__skip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* space-1100 (44px) is the documented minimum touch target — the label text
-     stays its normal size, this only pads the hit area out to the gate. */
-  min-width: var(--color-size-space-1100);
-  min-height: var(--color-size-space-1100);
-  margin-top: var(--color-size-space-700);
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-s-bold);
-  cursor: pointer;
-}
-
-/* Hint screens (hint1/hint2): a smaller, mic-only button — Figma specs 88px
-   here (not the 104px used on the Prompt-like pass/first-attempt row), and
-   no "Type instead" keyboard icon at all. Flagged in component-gaps.md:
-   dropping the non-voice fallback on a retry conflicts with voice-ux.md's
-   "always offer a non-voice path" principle, but matches the frame exactly. */
-.result__mic--hint {
-  width: var(--color-size-illustration-1100);
-  height: var(--color-size-illustration-1100);
-}
-
-.result__actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--color-size-space-800);
-  width: 100%;
-}
-
-.result__actions .btn {
-  width: 100%;
-}
-
-.result__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* space-1100 (44px) is the documented minimum touch target — the label text
-     stays its normal size, this only pads the hit area out to the gate. */
-  min-width: var(--color-size-space-1100);
-  min-height: var(--color-size-space-1100);
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-primary);
-  font: var(--color-typeScale-body-s-bold);
-  cursor: pointer;
 }

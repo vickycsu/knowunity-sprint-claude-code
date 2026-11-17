@@ -14,8 +14,12 @@
   gap: var(--color-size-space-200);
   width: 100%;
   max-width: var(--color-responsive-mobile-frame-width);
-  padding: var(--color-size-space-300) var(--color-size-space-500) var(--color-size-space-600);
-  background: var(--color-background-surface);
+  padding: var(--color-size-space-300) var(--color-size-space-500) var(--color-size-space-800);
+  /* Page-dark with a hairline top edge, matching the leaving sheet — and on
+     surface-grey the secondary button's fill would vanish into the sheet. */
+  background: var(--color-background-page);
+  border: var(--color-size-stroke-border) solid var(--color-border-default);
+  border-bottom: none;
   border-radius: var(--color-size-radius-800) var(--color-size-radius-800) 0 0;
 }
 
@@ -39,22 +43,15 @@
   text-align: center;
 }
 
-.mic-sheet .btn {
+/* Same pair as the leaving sheet: a full-width primary over a full-width
+   secondary, so the opt-out is a real button rather than a link. */
+.mic-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--color-size-space-300);
   width: 100%;
 }
 
-.mic-sheet__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* space-1100 (44px) is the documented minimum touch target. */
-  min-width: var(--color-size-space-1100);
-  min-height: var(--color-size-space-1100);
-  margin-top: var(--color-size-space-300);
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-text-link-hover);
-  font: var(--color-typeScale-body-s-regular);
-  cursor: pointer;
+.mic-sheet .btn {
+  width: 100%;
 }

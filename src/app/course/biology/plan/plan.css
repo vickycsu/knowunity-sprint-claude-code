@@ -184,13 +184,19 @@
   font: var(--color-typeScale-caption-m-regular);
 }
 
+/* Topic rings are raised, Duolingo-style: a darker lip under the face
+   (accent.brand.depth) gives depth, and on done rings a white shine across
+   the top (accent.brand.gloss) plus a light rim make them read as medals.
+   The lip sits below the ring, so rings leave room for it underneath. */
 .topic-ring {
+  position: relative;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--color-size-illustration-800);
   height: var(--color-size-illustration-800);
+  margin-bottom: var(--color-size-space-150);
   border-radius: var(--color-size-radius-full);
   border: var(--color-size-stroke-heavy-border) solid transparent;
 }
@@ -201,17 +207,112 @@
      accent.brand.on-bold. */
   background: var(--color-accent-brand-ring-gradient);
   color: var(--color-accent-brand-on-bold);
+  box-shadow:
+    inset 0 0 0 var(--color-size-space-100) var(--color-accent-brand-gloss),
+    0 var(--color-size-space-150) 0 var(--color-accent-brand-depth);
 }
 
+/* The shine: a soft highlight across the upper face, fading out downward. */
+.topic-ring--done::before,
+.topic-ring--current::before {
+  content: "";
+  position: absolute;
+  top: var(--color-size-space-100);
+  left: var(--color-size-space-300);
+  right: var(--color-size-space-300);
+  height: var(--color-size-space-700);
+  border-radius: var(--color-size-radius-full);
+  background: linear-gradient(var(--color-accent-brand-gloss), transparent 75%);
+  pointer-events: none;
+}
+
+.topic-ring--done .icon-slot,
+.topic-ring--current .icon-slot {
+  position: relative;
+}
+
+/* The next step: raised in solid brand, so it reads as live rather than
+   finished (done rings use the gradient) or locked (todo rings are flat). */
 .topic-ring--current {
-  background: var(--color-background-stacking);
-  border-color: var(--color-border-selected);
-  color: var(--color-text-primary);
+  background: var(--color-accent-brand-bold);
+  color: var(--color-accent-brand-on-bold);
+  box-shadow: 0 var(--color-size-space-150) 0 var(--color-accent-brand-depth);
+}
+
+/* A soft ring pulses outward from the next step, inviting the tap. Only on
+   the tappable one — after the session "Practice Exam" is current but has no
+   destination, so a pulse there would invite a tap that does nothing. */
+.study-plan__next .topic-ring--current::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--color-size-stroke-heavy-border));
+  border-radius: var(--color-size-radius-full);
+  border: var(--color-size-stroke-heavy-border) solid var(--color-border-selected);
+  animation: topic-ring-pulse 1.8s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes topic-ring-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+/* Pressing pushes the face down onto its lip, like a physical button. */
+.study-plan__node:active .topic-ring--current {
+  transform: translateY(var(--color-size-space-150));
+  box-shadow: 0 0 0 var(--color-accent-brand-depth);
 }
 
 .topic-ring--todo {
   background: var(--color-background-stacking);
   color: var(--color-text-secondary);
+}
+
+/* Room above the next step for its "Start" tag, which would otherwise sit
+   on the ring before it. */
+.study-plan__next {
+  margin-top: var(--color-size-space-800);
+}
+
+.study-plan__ring-anchor {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+
+.study-plan__start-tag {
+  position: absolute;
+  bottom: calc(100% + var(--color-size-space-100));
+  left: 50%;
+  transform: translateX(-50%);
+  animation: start-tag-bob 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes start-tag-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(var(--color-size-space-negative-100));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .study-plan__next .topic-ring--current::after,
+  .study-plan__start-tag {
+    animation: none;
+  }
+  .study-plan__next .topic-ring--current::after {
+    opacity: 0;
+  }
 }
 
 .study-plan__nav-bar {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { SESSION_LENGTH, TERMS, type Verdict } from "./terms";
+import { SESSION_LENGTH, TERMS, questionForAttempt, type Verdict } from "./terms";
 
 /**
  * Where a real answer lives between screens.
@@ -25,6 +25,8 @@ export interface AttemptRecord {
   /** Knowie's reply for this attempt. */
   bubbleCopy: string;
   caption?: string;
+  /** The student asked for this hint rather than earning it with an answer. */
+  requested?: boolean;
 }
 
 export interface TermRecord {
@@ -135,6 +137,61 @@ export function saveAttempt(term: number, record: AttemptRecord, resolved: boole
 export function readAttempt(term: number, attemptNumber: number): AttemptRecord | undefined {
   return read().terms[term]?.attempts.find(
     (attempt) => attempt.attemptNumber === attemptNumber,
+  );
+}
+
+/**
+ * "Hint": the student asks before answering. Climbs the same ladder a wrong
+ * answer does — hint 1, hint 2, then the answer — counting the hints this
+ * term has already given, so asking and earning share one ladder. Recorded
+ * as a real attempt, so a pass after it is a hinted pass (10 XP) and a
+ * requested reveal resolves the term at 0 XP, both by the existing rules.
+ */
+export function takeHint(term: number, attemptNumber: number): void {
+  const script = TERMS[term] ?? TERMS[1];
+  const given = (read().terms[term]?.attempts ?? []).filter(
+    (attempt) =>
+      attempt.attemptNumber < attemptNumber &&
+      (attempt.verdict === "hint1" || attempt.verdict === "hint2"),
+  ).length;
+  const verdict: Verdict = given === 0 ? "hint1" : given === 1 ? "hint2" : "reveal";
+  const bubbleCopy =
+    verdict === "hint1" ? script.hints.hint1 : verdict === "hint2" ? script.hints.hint2 : script.hints.reveal;
+
+  saveAttempt(
+    term,
+    {
+      attemptNumber,
+      transcript: "",
+      source: "voice",
+      verdict,
+      bubbleCopy,
+      caption: verdict === "reveal" ? undefined : "Tap to answer",
+      requested: true,
+    },
+    verdict === "reveal",
+  );
+}
+
+/**
+ * The question for a turn. A retry after a hint asks the hint's narrower
+ * question — taken from what was actually shown, since a hint the student
+ * asked for isn't in the script. With no record (a reload), the script decides.
+ */
+function questionFor(term: number, attemptNumber: number): string {
+  const script = TERMS[term] ?? TERMS[1];
+  if (attemptNumber <= 1) return script.question;
+  const previous = readAttempt(term, attemptNumber - 1);
+  if (!previous) return questionForAttempt(term, attemptNumber);
+  if (previous.verdict === "hint1" || previous.verdict === "hint2") return previous.bubbleCopy;
+  return script.question;
+}
+
+export function useQuestion(term: number, attemptNumber: number): string {
+  return useSyncExternalStore(
+    subscribe,
+    () => questionFor(term, attemptNumber),
+    () => questionForAttempt(term, attemptNumber),
   );
 }
 

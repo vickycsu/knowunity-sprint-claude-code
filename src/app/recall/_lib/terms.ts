@@ -26,6 +26,12 @@ export interface TermScript {
   answer: string;
   /** Shown in the Summary's "Explain more" sheet. */
   explainMore: { term: string; copy: string }[];
+  /**
+   * What "Hint" shows when the student asks before answering: a narrower
+   * question, a narrower one still, then the answer. Standalone wording —
+   * unlike a scripted attempt's reply, there's no answer to respond to.
+   */
+  hints: { hint1: string; hint2: string; reveal: string };
 }
 
 // Per-term scripted content. The spoken answers are prepopulated: tapping the
@@ -50,6 +56,12 @@ export const TERMS: Record<number, TermScript> = {
         copy: "Letting some things through and holding others back, rather than everything or nothing.",
       },
     ],
+    hints: {
+      hint1: "Think about where the membrane sits. What does it control for the cell?",
+      hint2: "Think about what gets into and out of the cell, and what decides that.",
+      reveal:
+        "Here's the answer: the membrane surrounds the cell and controls what enters and leaves it, because it's selectively permeable.",
+    },
     attempts: [
       {
         verdict: "empty",
@@ -78,6 +90,12 @@ export const TERMS: Record<number, TermScript> = {
         copy: "A passage through the membrane for molecules too large to slip across on their own.",
       },
     ],
+    hints: {
+      hint1: "How does the cell membrane decide what can enter and leave the cell?",
+      hint2: "What makes the membrane let some things through and not others?",
+      reveal:
+        "Here's the answer: the membrane is selectively permeable. Small molecules pass, larger ones need a protein channel.",
+    },
     attempts: [
       {
         verdict: "hint1",
@@ -116,6 +134,12 @@ export const TERMS: Record<number, TermScript> = {
         copy: "A barrier that lets some things through and holds others back.",
       },
     ],
+    hints: {
+      hint1: "What moves during osmosis, and which way does it go?",
+      hint2: "Think about where there's more water and where there's less.",
+      reveal:
+        "Here's the answer: osmosis is water moving across a membrane from where there's more water to where there's less.",
+    },
     attempts: [
       {
         verdict: "pass",
@@ -139,6 +163,12 @@ export const TERMS: Record<number, TermScript> = {
         copy: "Moving a substance against its gradient, which the cell has to spend energy to do.",
       },
     ],
+    hints: {
+      hint1: "How do the larger molecules get across?",
+      hint2: "What does the cell have to spend to move something against its gradient?",
+      reveal:
+        "Here's the answer: small molecules diffuse straight through, larger ones use protein channels, and moving something against its gradient costs energy.",
+    },
     attempts: [
       {
         verdict: "pass",

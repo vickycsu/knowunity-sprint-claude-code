@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Keyboard } from "lucide-react";
 import { SessionBar } from "@/components/SessionBar/SessionBar";
-import { IconSlot } from "@/components/IconSlot/IconSlot";
-import { MicIcon } from "@/components/icons/MicIcon";
 import { LeavingSheet } from "../../_components/LeavingSheet";
 import { KnowieAsks } from "../../_components/KnowieAsks";
 import { MicPermissionSheet } from "../../_components/MicPermissionSheet";
+import { AnswerControls } from "../../_components/AnswerControls";
 import { SESSION_LENGTH, TERMS, progressFor } from "../../_lib/terms";
-import { skipTerm, useXpEarnedBefore } from "../../_lib/session";
+import { takeHint, useXpEarnedBefore } from "../../_lib/session";
 import { claimKeyboard } from "../../_lib/keyboard";
 import "./prompt.css";
 
@@ -34,13 +32,16 @@ export default function PromptPage() {
     router.push(`/recall/${term}/recording`);
   }
 
-  function handleSkip() {
-    skipTerm(term);
-    if (term >= SESSION_LENGTH) {
-      router.push("/recall/summary");
-    } else {
-      router.push(`/recall/${term + 1}/prompt`);
-    }
+  function handleHint() {
+    takeHint(term, 1);
+    router.push(`/recall/${term}/result?attempt=1`);
+  }
+
+  function handleTypeInstead() {
+    // Claimed inside the tap; anything async first loses the gesture and
+    // the keyboard never opens.
+    claimKeyboard();
+    router.push(`/recall/${term}/text`);
   }
 
   return (
@@ -57,33 +58,11 @@ export default function PromptPage() {
         <KnowieAsks question={script.question} />
         <div className="prompt__spacer" />
 
-        <div className="prompt__mic-row">
-          <button
-            type="button"
-            className="prompt__mic"
-            aria-label="Start speaking"
-            onClick={handleMicTap}
-          >
-            <IconSlot size="400" icon={<MicIcon />} />
-          </button>
-          <button
-            type="button"
-            className="prompt__type-instead"
-            aria-label="Type instead"
-            onClick={() => {
-              // Claimed inside the tap; anything async first loses the
-              // gesture and the keyboard never opens.
-              claimKeyboard();
-              router.push(`/recall/${term}/text`);
-            }}
-          >
-            <IconSlot size="250" icon={<Keyboard size="100%" strokeWidth={2} aria-hidden="true" />} />
-          </button>
-        </div>
-
-        <button type="button" className="prompt__skip" onClick={handleSkip}>
-          Skip question
-        </button>
+        <AnswerControls
+          onMic={handleMicTap}
+          onTypeInstead={handleTypeInstead}
+          onHint={handleHint}
+        />
       </div>
 
       <MicPermissionSheet

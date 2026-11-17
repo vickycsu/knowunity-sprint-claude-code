@@ -20,6 +20,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { IconSlot } from "@/components/IconSlot/IconSlot";
+import { Chips } from "@/components/Chips/Chips";
 import { MicIcon } from "@/components/icons/MicIcon";
 import { resetSession, useSummary } from "@/app/recall/_lib/session";
 import "./plan.css";
@@ -81,7 +82,7 @@ const TOPIC_NODES: TopicNode[] = [
   {
     state: "current",
     title: "Explain it out loud",
-    subtitle: "Practice your knowledge from the last 3 topics",
+    subtitle: "Let's practice what you learned so far",
   },
   { state: "todo", title: "Membrane Permeability" },
   { state: "todo", title: "Membrane Transport" },
@@ -110,7 +111,8 @@ function TopicRing({ state, icon }: { state: TopicNodeState; icon?: ReactNode })
   const defaultIcon = state === "done" ? StarIcon : state === "current" ? <MicIcon /> : QuizIcon;
   return (
     <span className={`topic-ring topic-ring--${state}`}>
-      <IconSlot size="300" icon={icon ?? defaultIcon} />
+      {/* The star is the medal's emblem, so it fills more of the face. */}
+      <IconSlot size={state === "done" ? "400" : "300"} icon={icon ?? defaultIcon} />
     </span>
   );
 }
@@ -203,13 +205,27 @@ function StudyPlanContent() {
         <ol className="study-plan__path">
           {topicNodes.map((node) =>
             node.state === "current" && node.title === "Explain it out loud" ? (
-              <li key={node.title}>
+              <li key={node.title} className="study-plan__next">
                 <button
                   type="button"
                   className="study-plan__node"
                   onClick={startRecall}
                 >
-                  <TopicRing state={node.state} icon={node.icon} />
+                  {/* The next step: a "Start" tag over a raised, pulsing node,
+                      so it reads as the one thing to tap on the path. */}
+                  <span className="study-plan__ring-anchor">
+                    <span className="study-plan__start-tag" aria-hidden="true">
+                      <Chips
+                        label="Start"
+                        size="S"
+                        color="Primary"
+                        active
+                        showLeftIcon={false}
+                        showRightIcon={false}
+                      />
+                    </span>
+                    <TopicRing state={node.state} icon={node.icon} />
+                  </span>
                   <span className="study-plan__node-label">
                     <span className="study-plan__node-title">{node.title}</span>
                     {node.subtitle ? (

@@ -24,9 +24,9 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 - Session contains 4 terms and shows progress as “1/4”, because the session should be short and bounded.
 - Every loop screen has the same session bar with close, progress, counter, and XP.
 - Progress advances only when a term resolves, because hints, retries, and edge states do not complete a term.
-- Every prompt and hint screen has “Skip question.”
+- Every answer screen except Recording (Prompt, the typing turn, the empty take and both hints) ends in the same row: “Type instead” (“Speak instead” on the typing turn) on the left, “Hint” on the right, in the same place and style every time. Hint replaces “Skip question” (owner's call, 2026-11-17): it climbs the same ladder a wrong answer does — hint 1, hint 2, then the answer with “Next question” — so a stuck student can always reach the answer and move on. A pass after a hint counts as hinted (10 XP); a requested reveal resolves the term at 0 XP. Overrides voice-ux.md's “Skip a term” Must. Recording offers only “Type instead”, centred under the circle — no Hint mid-take (owner's call, 2026-11-17).
 - Answer path is Prompt → Recording → Recording paused → Processing → Result.
-- Paused state shows the transcript, a “Paused” label, and a labeled send control, because the student should see what was heard before committing.
+- Paused state shows the transcript and the send control (the “Paused” label was removed 2026-11-17 at the owner's request; the grey circle and “Tap to resume” carry the state), because the student should see what was heard before committing. The send icon keeps its place beside the circle in both states and is icon-only (accessible name “Send”); the visible “Send” label was dropped 2026-11-17 at the owner's request. Redo and Edit sit inside the answer box: the paused take is read-only until Edit.
 - Voice is the primary input and text is a one-tap fallback, because students must be able to continue when they cannot speak.
 - Voice uses explicit start/stop, with the take clearable before sending, because the student stays in control of when recording starts and when an answer is submitted.
 - Transcript is editable before sending and read-only after a verdict, because changing the answer after judging would invalidate the result.
@@ -38,7 +38,7 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 
 - Voice stays primary; typing is a per-turn fallback, not a mode. Nothing remembers a preference for it, because a parallel text-first experience is out of scope.
 - Tapping to type opens the keyboard with it. The tap claims the keyboard before navigating, since mobile browsers only raise it for a focus that happens inside a gesture. Added 2026-09-30.
-- Reachable in one tap from every screen in the loop: the keyboard icon on Prompt, "Type instead" during a recording, on both hint screens, on the empty-answer result, and from the permission primer, the denied sheet and the "still waiting for your microphone" sheet.
+- Reachable in one tap from every screen in the loop: "Type instead" on Prompt (the keyboard icon is gone, 2026-11-17), during a recording, on both hint screens, on the empty-answer result, and from the permission primer, the denied sheet and the "still waiting for your microphone" sheet.
 - Laid out as a compose screen, not a form. The question stays at the top, the compose block sits directly above the keyboard, and the dead space is between them rather than underneath the send button. Knowie collapses out of the way once the keyboard is up or an answer is on screen.
 - The answer carries across the switch in both directions, so a garbled transcript gets fixed by typing rather than retyped, and a typed draft survives a trip to the microphone and back.
 - Enter makes a new line; Cmd/Ctrl+Enter sends. An explanation runs to several sentences, so swallowing Enter into a send is the wrong default here.
@@ -65,11 +65,11 @@ Build:
 - Result: pass
 - Result: partial (hint 1, hint 2)
 - Result: fail / answer revealed
-- Clear the take before sending — empties the transcript and stays paused, so the student taps to resume when they are ready. Distinct from pause: pause keeps the take, clear empties it. Both are required.
+- Redo the take before sending — empties the transcript and goes straight back to listening, so starting over is one tap (changed 2026-11-17 from “clear and stay paused”, owner's call). Distinct from pause: pause keeps the take, redo throws it away. Both are required.
 - Text fallback turn
 - Mic permission primer + mocked permission sheet — designed and mocked in the web app; no real permission flow is engineered. The primer is an in-context sheet over the Prompt screen on the first mic tap, not a standalone start screen, so it stays inside the "no start sheet" rule above.
 - Permission denied → route to text. The primer's "Type instead" is that path; with no real permission request there is no denial to handle.
-- Skip a term
+- ~~Skip a term~~ — replaced by Hint, 2026-11-17 (see Decisions).
 
 If time:
 - Judge slow / timeout — reuses the Processing pattern with a retry, no new visual system.
