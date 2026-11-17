@@ -35,12 +35,8 @@
 
 .answer-links {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.answer-links--centered {
   justify-content: center;
+  width: 100%;
 }
 
 .answer-links__link {

@@ -24,7 +24,7 @@ Inside the study plan path, as a card between topic rows: Courses → course →
 - Session contains 4 terms and shows progress as “1/4”, because the session should be short and bounded.
 - Every loop screen has the same session bar with close, progress, counter, and XP.
 - Progress advances only when a term resolves, because hints, retries, and edge states do not complete a term.
-- Every answer screen except Recording (Prompt, the typing turn, the empty take and both hints) ends in the same row: “Type instead” (“Speak instead” on the typing turn) on the left, “Hint” on the right, in the same place and style every time. Hint replaces “Skip question” (owner's call, 2026-11-17): it climbs the same ladder a wrong answer does — hint 1, hint 2, then the answer with “Next question” — so a stuck student can always reach the answer and move on. A pass after a hint counts as hinted (10 XP); a requested reveal resolves the term at 0 XP. Overrides voice-ux.md's “Skip a term” Must. Recording offers only “Type instead”, centred under the circle — no Hint mid-take (owner's call, 2026-11-17).
+- Every answer screen (Prompt, Recording, the typing turn, the empty take, both hints and the reveal) ends with “Type instead” (“Speak instead” on the typing turn) alone, centred under the main action, in the same place and style every time. There is no “Skip question” and no student-requested hint (owner's call, 2026-11-17): hints come only from the answer ladder below, which always ends in the answer and “Next question”, and the session bar's close is the exit. Overrides voice-ux.md's “Skip a term” Must.
 - Answer path is Prompt → Recording → Recording paused → Processing → Result.
 - Paused state shows the transcript and the send control (the “Paused” label was removed 2026-11-17 at the owner's request; the grey circle and “Tap to resume” carry the state), because the student should see what was heard before committing. The send icon keeps its place beside the circle in both states and is icon-only (accessible name “Send”); the visible “Send” label was dropped 2026-11-17 at the owner's request. Redo and Edit sit inside the answer box: the paused take is read-only until Edit.
 - Voice is the primary input and text is a one-tap fallback, because students must be able to continue when they cannot speak.
@@ -69,7 +69,7 @@ Build:
 - Text fallback turn
 - Mic permission primer + mocked permission sheet — designed and mocked in the web app; no real permission flow is engineered. The primer is an in-context sheet over the Prompt screen on the first mic tap, not a standalone start screen, so it stays inside the "no start sheet" rule above.
 - Permission denied → route to text. The primer's "Type instead" is that path; with no real permission request there is no denial to handle.
-- ~~Skip a term~~ — replaced by Hint, 2026-11-17 (see Decisions).
+- ~~Skip a term~~ — removed 2026-11-17 (see Decisions).
 
 If time:
 - Judge slow / timeout — reuses the Processing pattern with a retry, no new visual system.

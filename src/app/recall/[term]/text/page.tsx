@@ -10,7 +10,6 @@ import { TERMS, progressFor, SESSION_LENGTH } from "../../_lib/terms";
 import { AnswerLinks } from "../../_components/AnswerControls";
 import {
   saveDraft,
-  takeHint,
   useCarriedDraft,
   useQuestion,
   useXpEarnedBefore,
@@ -132,13 +131,6 @@ export default function TextPage() {
     );
   }
 
-  function handleHint() {
-    releaseKeyboard();
-    takeHint(term, attemptNumber);
-    router.push(`/recall/${term}/result?attempt=${attemptNumber}`);
-  }
-
-
   return (
     <main
       className="text-turn"
@@ -189,7 +181,6 @@ export default function TextPage() {
         <AnswerLinks
           switchLabel="Speak instead"
           onSwitch={handleSpeakInstead}
-          onHint={isSayItBack ? undefined : handleHint}
         />
       </div>
 

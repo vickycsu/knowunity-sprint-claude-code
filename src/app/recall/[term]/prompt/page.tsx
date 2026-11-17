@@ -8,7 +8,7 @@ import { KnowieAsks } from "../../_components/KnowieAsks";
 import { MicPermissionSheet } from "../../_components/MicPermissionSheet";
 import { AnswerControls } from "../../_components/AnswerControls";
 import { SESSION_LENGTH, TERMS, progressFor } from "../../_lib/terms";
-import { takeHint, useXpEarnedBefore } from "../../_lib/session";
+import { useXpEarnedBefore } from "../../_lib/session";
 import { claimKeyboard } from "../../_lib/keyboard";
 import "./prompt.css";
 
@@ -30,11 +30,6 @@ export default function PromptPage() {
       return;
     }
     router.push(`/recall/${term}/recording`);
-  }
-
-  function handleHint() {
-    takeHint(term, 1);
-    router.push(`/recall/${term}/result?attempt=1`);
   }
 
   function handleTypeInstead() {
@@ -61,7 +56,6 @@ export default function PromptPage() {
         <AnswerControls
           onMic={handleMicTap}
           onTypeInstead={handleTypeInstead}
-          onHint={handleHint}
         />
       </div>
 

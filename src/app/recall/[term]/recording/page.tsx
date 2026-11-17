@@ -202,7 +202,7 @@ export default function RecordingPage() {
         </div>
 
         <div className="recording__links" inert={editing}>
-          <AnswerLinks switchLabel="Type instead" onSwitch={handleTypeInstead} centered />
+          <AnswerLinks switchLabel="Type instead" onSwitch={handleTypeInstead} />
         </div>
       </div>
 

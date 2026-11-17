@@ -17,7 +17,7 @@ import {
   progressFor,
   type Verdict,
 } from "../../_lib/terms";
-import { readAttempt, takeHint, useAttempt, useQuestion, useXpThrough } from "../../_lib/session";
+import { readAttempt, useAttempt, useQuestion, useXpThrough } from "../../_lib/session";
 import { claimKeyboard } from "../../_lib/keyboard";
 import "./result.css";
 
@@ -48,12 +48,7 @@ export default function ResultPage() {
   const emptyQuestion = useQuestion(term, attemptNumber);
 
   const verdict = attempt?.verdict ?? "empty";
-  // A hint the student asked for isn't a judgement of an answer, so it
-  // gets a neutral "Hint" tag instead of "Almost there" / "Try again".
-  const verdictMeta =
-    attempt?.requested && (verdict === "hint1" || verdict === "hint2")
-      ? { label: "Hint", icon: <InfoCircleIcon />, tone: "partial" }
-      : VERDICT_META[verdict];
+  const verdictMeta = VERDICT_META[verdict];
   // Progress advances on any terminal verdict — a reveal resolves the term
   // exactly as a pass does. Hints and empty takes leave it open.
   const isResolved = verdict === "pass" || verdict === "reveal";
@@ -70,19 +65,6 @@ export default function ResultPage() {
   function handleAdvance() {
     if (isLastTerm) router.push("/recall/summary");
     else router.push(`/recall/${nextTerm}/prompt`);
-  }
-
-  // Hint for the next turn of this term: the one after the attempt shown.
-  function handleHint() {
-    takeHint(term, attemptNumber + 1);
-    router.push(`/recall/${term}/result?attempt=${attemptNumber + 1}`);
-  }
-
-  // After a pass the screen already asks the next term's question, so its
-  // hint belongs to that term's first turn.
-  function handleNextTermHint() {
-    takeHint(nextTerm, 1);
-    router.push(`/recall/${nextTerm}/result?attempt=1`);
   }
 
   function typeInstead(path: string) {
@@ -144,10 +126,8 @@ export default function ResultPage() {
             caption="Try that again"
             onMic={handleRetry}
             onTypeInstead={() => typeInstead(`/recall/${term}/text?attempt=${attemptNumber + 1}`)}
-            onHint={handleHint}
           />
         ) : verdict === "reveal" ? (
-          // No hint after the answer: the ladder is finished.
           <AnswerControls
             caption="Try it in your own words"
             onMic={() => router.push(`/recall/${term}/recording?attempt=sayback`)}
@@ -160,7 +140,6 @@ export default function ResultPage() {
             caption={attempt?.caption}
             onMic={handleRetry}
             onTypeInstead={() => typeInstead(`/recall/${term}/text?attempt=${attemptNumber + 1}`)}
-            onHint={handleHint}
           />
         ) : isLastTerm || !nextScript ? (
           <Button cta="Continue" variant="Primary" size="L" onClick={handleAdvance} />
@@ -168,7 +147,6 @@ export default function ResultPage() {
           <AnswerControls
             onMic={() => router.push(`/recall/${nextTerm}/recording`)}
             onTypeInstead={() => typeInstead(`/recall/${nextTerm}/text`)}
-            onHint={handleNextTermHint}
           />
         )}
       </div>

@@ -1207,3 +1207,15 @@ worse than one with fixed answers.
   take). While editing, the circle, the send icon and Type instead fade out
   (200ms, raw — no motion token) and go `inert`. Leaving edit mode without
   sending is only possible through Redo.
+
+## Hint removed again; Type instead centred everywhere (2026-11-17)
+
+- **No Hint button anywhere** (owner's call). `takeHint()`, the `requested`
+  flag, the neutral "Hint" tag and the per-term `hints` copy are deleted;
+  hints come only from the scripted answer ladder again. No Skip either —
+  the ladder always reaches the reveal and "Next question", and the session
+  bar's close is the exit. sprint-context.md updated.
+- **`AnswerLinks` is now a single centred link** ("Type instead", or
+  "Speak instead" on the typing turn). Measured centred at x=195 on Prompt,
+  Recording, Try again and the typing turn.
+- `skipTerm()` in session.ts is still unused.
