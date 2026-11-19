@@ -30,10 +30,12 @@ export interface TermScript {
 
 // Per-term scripted content. The spoken answers are prepopulated: tapping the
 // mic replays the scripted take for that term and attempt rather than
-// transcribing live. Term 1 (empty -> pass), term 2 (hint1 -> hint2 ->
-// reveal), and term 1's original question all match Figma's actual authored
-// copy ("Screen 04/07/11" for term 1, "Screen 08/09/10" for term 2's hint
-// flow). Terms 3-4 are single-pass placeholders pending their own screens.
+// transcribing live. Term 1 (pass), term 2 (hint1 -> hint2 -> reveal), and
+// term 1's original question match Figma's authored copy ("Screen 04/07/11"
+// for term 1, "Screen 08/09/10" for term 2's hint flow). Term 1's scripted
+// "nothing captured" first take was removed 2026-11-17 at the owner's
+// request — the first mic tap read as a broken mic. Terms 3-4 are
+// single-pass placeholders pending their own screens.
 export const TERMS: Record<number, TermScript> = {
   1: {
     name: "Plasma Membrane",
@@ -51,11 +53,6 @@ export const TERMS: Record<number, TermScript> = {
       },
     ],
     attempts: [
-      {
-        verdict: "empty",
-        transcript: "",
-        bubbleCopy: "",
-      },
       {
         verdict: "pass",
         transcript: "It protects the cell and regulates the transport of materials coming in and exiting the cell.",

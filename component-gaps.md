@@ -1219,3 +1219,13 @@ worse than one with fixed answers.
   "Speak instead" on the typing turn). Measured centred at x=195 on Prompt,
   Recording, Try again and the typing turn.
 - `skipTerm()` in session.ts is still unused.
+
+## Term 1's first take now speaks (2026-11-17)
+
+- **The scripted "nothing captured" take is gone** from term 1 (owner's
+  report: no transcript appeared on the first question, so the mic looked
+  broken). Term 1 is now a first-try pass (25 XP). **Consequence:** no
+  scripted take is empty any more, and Send is disabled with no words, so
+  the empty-answer Result ("We didn't catch anything") is unreachable in a
+  walkthrough. Its code is kept. Put an empty take back on a later term if
+  that state needs demoing.
